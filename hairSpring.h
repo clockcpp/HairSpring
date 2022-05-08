@@ -9,6 +9,7 @@
 #include <string>
 #include <thread>
 #include <cmath>
+#include <map>
 
 #include <conio.h>
 
@@ -32,35 +33,10 @@ using namespace std;
 
 #define _Esc_maxn 1024
 
-// perm colors
-#define ESC_CONSOLE_COLOR_BLACK			'0'
-#define ESC_CONSOLE_COLOR_BLUE			'1'
-#define ESC_CONSOLE_COLOR_GREEN			'2'
-#define ESC_CONSOLE_COLOR_LIME			'3'
-#define ESC_CONSOLE_COLOR_RED			'4'
-#define ESC_CONSOLE_COLOR_PURPLE	    '5'
-#define ESC_CONSOLE_COLOR_YELLOW	    '6'
-#define ESC_CONSOLE_COLOR_WHITE			'7'
-#define ESC_CONSOLE_COLOR_GRAY			'8'
-#define ESC_CONSOLE_COLOR_AZURE			'9'
-#define ESC_CONSOLE_COLOR_LITE_GREEN	'A'
-#define ESC_CONSOLE_COLOR_CYAN			'B'
-#define ESC_CONSOLE_COLOR_LITE_RED		'C'
-#define ESC_CONSOLE_COLOR_LITE_PURPLE	'D'
-#define ESC_CONSOLE_COLOR_LITE_YELLOW	'E'
-#define ESC_CONSOLE_COLOR_PURE_WHITE	'F'
-#define ESC_CONSOLE_COLOR_RANDOM        'R'
+#define ___EscDef___ true
+#endif
 
-// text colors
-#define ESC_COLOR_PUREWHITE				0
-#define	ESC_COLOR_RED					1
-#define ESC_COLOR_GREEN					2
-#define ESC_COLOR_BLUE					3
-#define ESC_COLOR_YELLOW		    	4
-#define ESC_COLOR_PURPLE			    5
-#define ESC_COLOR_CYAN					6
-#define ESC_COLOR_RANDOM                7
-
+#ifndef KEYs
 // keys
 #define KEY_BACKSPACE                   8
 #define KEY_TAB                         9
@@ -178,29 +154,59 @@ using namespace std;
 #define KEY_8                           56
 #define KEY_9                           57
 
-#define ESC_CHCP_US                     "437"
-#define ESC_CHCP_MULT                   "850"
-#define ESC_CHCP_SLAVIC                 "852"
-#define ESC_CHCP_CYRILLIC               "855"
-#define ESC_CHCP_TURKISH                "857"
-#define ESC_CHCP_Portuguese             "860"
-#define ESC_CHCP_Icelandic              "861"
-#define ESC_CHCP_CANADIAN               "863"
-#define ESC_CHCP_NORDIC                 "865"
-#define ESC_CHCP_RUSSIAN                "866"
-#define ESC_CHCP_MGREEK                 "869"
-#define ESC_CHCP_CHINESE                "936"
-#define ESC_CHCP_ANSI                   "65000"
-#define ESC_CHCP_UNICODE                "65001"
-
-#define ___EscDef___ true
+#define KEYs true
 #endif
 
 #ifndef ___HSDef___
+// perm colors
+#define HS_CONSOLE_COLOR_BLACK			'0'
+#define HS_CONSOLE_COLOR_BLUE			'1'
+#define HS_CONSOLE_COLOR_GREEN			'2'
+#define HS_CONSOLE_COLOR_LIME			'3'
+#define HS_CONSOLE_COLOR_RED			'4'
+#define HS_CONSOLE_COLOR_PURPLE	    '5'
+#define HS_CONSOLE_COLOR_YELLOW	    '6'
+#define HS_CONSOLE_COLOR_WHITE			'7'
+#define HS_CONSOLE_COLOR_GRAY			'8'
+#define HS_CONSOLE_COLOR_AZURE			'9'
+#define HS_CONSOLE_COLOR_LITE_GREEN	'A'
+#define HS_CONSOLE_COLOR_CYAN			'B'
+#define HS_CONSOLE_COLOR_LITE_RED		'C'
+#define HS_CONSOLE_COLOR_LITE_PURPLE	'D'
+#define HS_CONSOLE_COLOR_LITE_YELLOW	'E'
+#define HS_CONSOLE_COLOR_PURE_WHITE	'F'
+#define HS_CONSOLE_COLOR_RANDOM        'R'
+// text colors
+#define HS_COLOR_PUREWHITE				0
+#define	HS_COLOR_RED					1
+#define HS_COLOR_GREEN					2
+#define HS_COLOR_BLUE					3
+#define HS_COLOR_YELLOW		    	4
+#define HS_COLOR_PURPLE			    5
+#define HS_COLOR_CYAN					6
+#define HS_COLOR_RANDOM                7
+
+#define HS_CHCP_US                     "437"
+#define HS_CHCP_MULT                   "850"
+#define HS_CHCP_SLAVIC                 "852"
+#define HS_CHCP_CYRILLIC               "855"
+#define HS_CHCP_TURKISH                "857"
+#define HS_CHCP_Portuguese             "860"
+#define HS_CHCP_Icelandic              "861"
+#define HS_CHCP_CANADIAN               "863"
+#define HS_CHCP_NORDIC                 "865"
+#define HS_CHCP_RUSSIAN                "866"
+#define HS_CHCP_MGREEK                 "869"
+#define HS_CHCP_CHINESE                "936"
+#define HS_CHCP_ANSI                   "65000"
+#define HS_CHCP_UNICODE                "65001"
+
 #define HS_DISTANCE_MANHATTAN       0
 #define HS_DISTANCE_EUCLID          1
 #define ___HSDef___
 #endif
+
+map<int, bool> keyCodeTrackerLIB;
 
 struct gmConfig
 {
@@ -211,11 +217,6 @@ struct gmConfig
     string consoleCHCP = "65001";
     int gameTPS = 64;
     int gameMaxFPS = 60;
-
-    int worldGravityFactor = 9.8;
-    int worldAirResistanceFactor = 0.1;
-    int worldFrictionForceFactor = 1.0;
-    int worldSmoothForth = true;
 
     bool enable_watchdog = true;
     long watchdog_timer = 20000;
@@ -490,13 +491,37 @@ namespace _HairSpring
         }
         return result;
     }
+
+    void KeyCodeTracker()
+    {
+        while (1)
+        {
+            while (handler.pause.pauseClient);
+            if (handler.stopGame)
+            {
+                return;
+            }
+            map<int, bool>::iterator iter;
+            iter = keyCodeTrackerLIB.begin();
+            while (iter != keyCodeTrackerLIB.end())
+            {
+                if (!KEY_DOWN(iter->first))
+                {
+                    keyCodeTrackerLIB.erase(iter->first);
+                    break;
+                }
+                iter++;
+            }
+        }
+        return;
+    }
 }
 
 namespace hs
 {
     struct DAT
     {
-        int image[HS_MAXN][HS_MAXN] = { 0 };
+        char image[HS_MAXN][HS_MAXN] = { 0 };
         int color[HS_MAXN][HS_MAXN] = { 0 };
     };
     struct TXT
@@ -504,60 +529,44 @@ namespace hs
         string text[HS_MAXN] = { 0 };
         int color[HS_MAXN][HS_MAXN] = { 0 };
     };
+    struct ATTRIBUTE
+    {
+        bool NoGravity = false;
+        bool NoClip = false;
+    };
+    struct PRELOADEDANIMATE
+    {
+        DAT* animate;
+    };
     class actor
     {
     public:
         COORD anchor;
-        float angle;
-        // currentForce:
-        // pair<int, pair<float, float> >
-        //      timer     ForceX ForceY
-
-        // FORCE ANGLE:
-        //                      __
-        //                  /\   /\
-        //                  | F /
-        //                  |  /
-        //                  |-/ <-------  ¡Ïalpha
-        //                  |/
-        // -----------------+----------------->
-        //                 /|O
-        //                / |
-        //               /  |
-        //              /   |
-
-        vector<pair<int, pair<float, float> > > currentForce;
+        ATTRIBUTE attr;
 
         bool use_full_color = false;
-        int full_color = ESC_COLOR_PUREWHITE;
+        int full_color = HS_COLOR_PUREWHITE;
 
-        bool NoGravity = false;
-        bool NoClip = false;
-        inline void addForce2Position(COORD position, int tickToTarget)
-        {
-            currentForce.push_back
-            ({
-                tickToTarget, 
-                {
-                (anchor.X - position.X) / tickToTarget,
-                (anchor.Y - position.Y) / tickToTarget
-                }
-            });
-        }
-        inline void addForce2Angle(float angle, int distance, bool distanceType)
-        {
-            // TODO: add force to angle
-        }
+        bool use_animate = false;
+        bool pre_loaded_animate = false;
     };
     class actorIMG:actor
     {
     public:
         DAT data;
+        DAT animate;
     };
     class actorTXT:actor
     {
     public:
         TXT text;
+    };
+    class actorFILE :actor
+    {
+    public:
+        string imageFilePath;
+        string colorFilePath;
+
     };
 
     inline HWND getConsoleHWND()
@@ -589,7 +598,7 @@ namespace hs
     }
     /// <summary>
     /// change the encoding of the page
-    /// e.g. chcp(ESC_CHCP_UNICODE)...
+    /// e.g. chcp(HS_CHCP_UNICODE)...
     /// enter location for specified encoding(without this step the console may not
     /// display the correct text in others' computers).
     /// </summary>
@@ -621,6 +630,19 @@ namespace hs
     inline bool keyDown(int KeyCode)
     {
         return KEY_DOWN(KeyCode);
+    }
+    inline bool keyPress(int KeyCode)
+    {
+        if (keyDown(KeyCode))
+        {
+            bool used = false;
+            if (keyCodeTrackerLIB.count(KeyCode) == 0)
+            {
+                keyCodeTrackerLIB.insert({ KeyCode,true });
+                return true;
+            }
+        }
+        return false;
     }
     /// <summary>
     /// read a bool value from a config file
@@ -723,8 +745,13 @@ int exit(int, char**);
 int dbgFPS = 0, dbgTPS = 0;
 bool svrHeartBeat = true, cltHeartBeat = true;
 
+vector<hs::actor> actors;
+vector<hs::actorIMG> actorIMGs;
+vector<hs::actorTXT> actorTXTs;
+vector<hs::actorFILE> actorFILEs;
+
 /// <summary>
-/// server second control
+/// server secondary control
 /// </summary>
 /// <param name="argc">/</param>
 /// <param name="argv">/</param>
@@ -751,12 +778,19 @@ void Server(int argc, char** argv)
     }
 }
 
+/// <summary>
+/// Client secondary control
+/// </summary>
+/// <param name="argc">/</param>
+/// <param name="argv">/</param>
+/// <returns>N/A</returns>
 void Client(int argc, char** argv)
 {
     register clock_t lastTimeClt = clock();
     register clock_t delayClt = 1000 / cfg.gameMaxFPS;
     register COORD legCoord = { 0,0 };
     register COORD coord = { 0,0 };
+    register bool debugMode = false;
     while (!handler.stopGame)
     {
         while (clock() - lastTimeClt < delayClt);
@@ -771,7 +805,21 @@ void Client(int argc, char** argv)
         if (!handler.pause.pauseClient)
         {
             loopClient(argc, argv);
-            if (cfg.debug && KEY_DOWN(cfg.debugKey))
+            if (cfg.debug && hs::keyPress(cfg.debugKey))
+            {
+                debugMode = !debugMode;
+                if (!debugMode)
+                {
+                    legCoord = hs::getCursorPos();
+                    coord = hs::getConsoleSize();
+                    hs::gotoxy(coord.X - 10, 0);
+                    printf("          ");
+                    hs::gotoxy(coord.X - 10, 1);
+                    printf("          ");
+                    hs::gotoxy(legCoord.X, legCoord.Y);
+                }
+            }
+            if (cfg.debug && debugMode)
             {
                 legCoord = hs::getCursorPos();
                 coord = hs::getConsoleSize();
@@ -785,6 +833,9 @@ void Client(int argc, char** argv)
     }
 }
 
+/// <summary>
+/// Watchdog
+/// </summary>
 void watchdog()
 {
     if (!cfg.enable_watchdog)
@@ -795,6 +846,14 @@ void watchdog()
     clock_t lastHBClt = clock();
     while (!handler.stopGame)
     {
+        if (handler.pause.pauseClient)
+        {
+            lastHBClt = clock();
+        }
+        if (handler.pause.pauseServer)
+        {
+            lastHBSvr = clock();
+        }
         if (svrHeartBeat)
         {
             lastHBSvr = clock();
@@ -819,6 +878,12 @@ void watchdog()
     return;
 }
 
+/// <summary>
+/// main function that control the whole program
+/// </summary>
+/// <param name="argc">/</param>
+/// <param name="argv">/</param>
+/// <returns>return value that returns in function 'exit'</returns>
 int main(int argc, char* argv[])
 {
     config(argc, argv);
@@ -827,9 +892,14 @@ int main(int argc, char* argv[])
     thread svr(Server, argc, argv);
     thread clt(Client, argc, argv);
     thread wd(watchdog);
+    thread keylogger(_HairSpring::KeyCodeTracker);
     while (!handler.stopGame);
     int returnValue = exit(argc, argv);
     // end
+    if (keylogger.joinable())
+    {
+        keylogger.join();
+    }
     if (svr.joinable())
     {
         svr.join();
