@@ -89,5 +89,91 @@ but be carefully when you use this, it may cause lots of bugs that caused by fun
 
 btw i found a spelling mistake at ln 19 and im gonna corret it later.
 
-## functions list:
-- please wait
+## for fun
+### ---{ Graphics }---  
+☐ You forget what reality is  
+☐ Beautiful  
+☐ Good  
+☐ Decent  
+☐ Bad  
+☐ Don‘t look too long at it  
+☑ MS-DOS // significantly it does is MS-DOS, isn't it ¯\_(ツ)_/¯  
+  
+### ---{ Gameplay }---  
+☐ Very good  
+☑ Good   // I don't think a console can do many thing as 3A games.  
+☐ It's just gameplay  
+☐ Mehh  
+☐ Watch paint dry instead  
+☐ Just don't  
+  
+### ---{ Audio }---  
+☐ Eargasm  
+☐ Very good  
+☐ Good  
+☐ Not too bad  
+☑ Bad   // If I add some more functions, it won't be only "windows warning" sound later...  
+☐ I'm now deaf  
+  
+### ---{ Audience }---  
+☐ Kids  
+☑ Teens // It's easy for C++ programmers or amateurs!(just recite the functions all the days(no!))  
+☑ Adults  
+☐ Grandma  
+  
+### ---{ PC Requirements }--- // you will deside the TPS and FPS, the more TPS and FPS, the more CPU use.  
+☑ Check if you can run paint  
+☑ Potato  
+☑ Decent  
+☑ Fast  
+☑ Rich boi  
+☑ Ask NASA if they have a spare computer  
+  
+### ---{ Difficulty }--- // you will create your puzzles.  
+☑ Just press 'W'  
+☑ Easy  
+☑ Easy to learn / Hard to master  
+☑ Significant brain usage  
+☐ Difficult  
+☐ Dark Souls  
+  
+### ---{ Grind }--- // you will deside whether add some or too much...  
+☑ Nothing to grind  
+☑ Only if u care about leaderboards/ranks  
+☑ Isn't necessary to progress  
+☑ Average grind level  
+☑ Too much grind  
+☑ You'll need a second life for grinding  
+  
+### ---{ Story }--- // you can make painball, adventure, story type game and more!
+☑ No Story  
+☑ Some lore  
+☑ Average  
+☑ Good  
+☑ Lovely  
+☑ It'll replace your life  
+  
+### ---{ Game Time }--- // you can save the saves in the computer(with c++ file operations)  
+☑ Long enough for a cup of coffee  
+☑ Short  
+☑ Average  
+☑ Long  
+☑ To infinity and beyond  
+  
+### ---{ Price }--- // the lib is under LGPL and completely free, but you may decide a price.  
+☑ It's free!  
+☐ Worth the price  
+☐ If it's on sale  
+☐ If u have some spare money left  
+☐ Not recommended  
+☐ You could also just burn your money  
+  
+### ---{ Bugs }--- // if you met any, please create issues  
+☐ Never heard of  
+☑ Minor bugs  
+☐ Can get annoying  
+☐ ARK: Survival Evolved  
+☐ The game itself is a big terrarium for bugs  
+  
+## functions list:  
+- please wait, the engine is not completed.  
