@@ -8,7 +8,12 @@ you need to include the file then use following format to write the cpp
 
 main file:
 ```cpp
-#include <iostream> // and more files if you need
+// HairSpring.cpp : This file contains function "main". some of '.text' is here...
+//
+
+#undef NDebug
+
+#include <iostream>
 #include "hairSpring.h"
 
 // runs like init, but it will be more tidier than put everything in a function.
@@ -20,13 +25,7 @@ void config(int argc, char* argv[])
 	cfg.consoleSizeX = 160;
 	cfg.consoleSizeY = 45;
 	// set the encoding of the console
-	cfg.consoleCHCP = ESC_CHCP_UNICODE;
-	
-	// set the attribute of the game
-	cfg.worldAirResistanceFactor = 0.1;
-	cfg.worldFrictionForceFactor = 1.0;
-	cfg.worldGravityFactor = 9.8;
-	cfg.worldSmoothForth = true;
+	cfg.consoleCHCP = HS_CHCP_UNICODE;
 	
 	// game base settings
 	cfg.gameTPS = 128;
@@ -36,7 +35,10 @@ void config(int argc, char* argv[])
 	cfg.watchdog_timer = 20000; // ms
 
 	// debug settings
-	cfg.debug = true; // turn this off when you don't need it
+	// Turn this off when you gonna release the game, or you may wanna leave it for players.
+	// Debugging __significantly__ slows down the game
+	//					(e.g. 128TPS->100TPS, 144FPS->128FPS, etc.)
+	cfg.debug = true; 
 	cfg.debugKey = KEY_F3;
 }
 
@@ -44,11 +46,14 @@ void config(int argc, char* argv[])
 void init(int argc, char *argv[])
 {
 	// code here...
-	hs::msgbox(NULL, "Init", cfg.windowName.c_str());
 }
+
+// IF you do decide only use one of following function for BOTH calculation and rendering, 
+// you may COMPLETELY MESS the game up
 
 // this function run in another thread, and loop until it exit(in this
 // case we use esc to exit)
+// you'd better use this function for rendering something, not calculating.
 void loopClient(int argc, char *argv[])
 {
 	if (hs::keyDown(KEY_ESC))
@@ -56,14 +61,15 @@ void loopClient(int argc, char *argv[])
 		handler.stopGame = true;
 	}
 	// code here...
+	
 
-	printf("awa\n");
 
 	return;
 }
 
 // this function run in another thread, and loop until it exit
 // for singleplayer, we only need call exit at client side.
+// you'd better use this function for calculating something, not rendering.
 void loopServer(int argc, char* argv[])
 {
 	// code here...
@@ -75,10 +81,14 @@ void loopServer(int argc, char* argv[])
 int exit(int argc, char *argv[])
 {
 	// code here...
-	hs::msgbox(NULL, "Exiting!", cfg.windowName.c_str());
+	
 	// this controls the return value
 	return 0;
 }
+
+// Run prog	: Ctrl + F5 or debug > "start executing(without debugging)"
+// Debug	: F5        or debug > "start debugging"
+
 
 ```
 or you may use following code to omit the "hs::"
