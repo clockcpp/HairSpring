@@ -1,6 +1,6 @@
 # INDEV: NOT support many functions in most engine currently
 # HairSpring
-A 2D engine for cpp console games,  
+A 2D library for cpp console games,  
 based on a part of escapement.
 
 ## How to use it
