@@ -10,6 +10,7 @@
 #include <thread>
 #include <cmath>
 #include <map>
+#include <queue>
 
 #include <conio.h>
 
@@ -22,7 +23,7 @@ using namespace std;
 #define __DEBUG_VERSION_OF_HAIRSPRING__ 0
 #define __COMPILE_VERSION_OF_HAIRSPRING__ 0
 
-#define HS_MAXN 100
+#define HS_MAXN 1000
 
 #ifndef ___EscDef___
 #define cmd(str) system(((string)str).c_str())
@@ -208,21 +209,65 @@ using namespace std;
 
 map<int, bool> keyCodeTrackerLIB;
 
+bool __HS_DBG_NOW_SHOW_HITBOX__ = false;
+
 struct gmConfig
 {
+    /// <summary>
+    /// the HWND of the window, you can use hs::getConsoleHWND() to get it easily.
+    /// </summary>
     HWND consoleHwnd = NULL;
+    /// <summary>
+    /// the title of the console
+    /// you can change it anytime with 'cmd("title " + <windowName>);'
+    /// </summary>
     string windowName = "Untitled";
+    /// <summary>
+    /// the size of the console (X)
+    /// </summary>
     int consoleSizeX = 160;
+    /// <summary>
+    /// the size of the console (Y)
+    /// </summary>
     int consoleSizeY = 45;
+    /// <summary>
+    /// go https://docs.microsoft.com/en-us/windows-server/administration/windows-commands/chcp
+    /// for more info.
+    /// </summary>
     string consoleCHCP = "65001";
-    int gameTPS = 64;
+    /// <summary>
+    /// How many times will the server proc run per second(if it can)
+    /// </summary>
+    int gameTPS = 20;
+    /// <summary>
+    /// How many times will the client proc run per second(if it can)
+    /// </summary>
     int gameMaxFPS = 60;
 
+    /// <summary>
+    /// the task will never be kill by watchdog, when this is false, the "watchdog_timer" 
+    /// will also be disabled
+    /// </summary>
     bool enable_watchdog = true;
+    /// <summary>
+    /// timer: when a process has lagged for such millisecond, the task will be killed.
+    /// dosen't work well when the value has been set lower than 2000 ms(2 seconds)
+    /// </summary>
     long watchdog_timer = 20000;
 
+    /// <summary>
+    /// debug or release?
+    /// </summary>
     bool debug = true;
+    /// <summary>
+    /// press which key to debug?(show FPS and TPS on the console)
+    /// </summary>
     int debugKey = KEY_F3;
+    /// <summary>
+    /// press which key to show hitboxes of the actors?
+    /// (only work when you draw it again)
+    /// </summary>
+    int debugHitBox = KEY_F4;
 } cfg;
 struct gamePause
 {
@@ -492,10 +537,15 @@ namespace _HairSpring
         return result;
     }
 
+    /// <summary>
+    /// used to track keys until it releases
+    /// </summary>
     void KeyCodeTracker()
     {
+        register int keycodeTrackerSleep = 1000 / cfg.gameMaxFPS;
         while (1)
         {
+            Sleep(keycodeTrackerSleep);
             while (handler.pause.pauseClient);
             if (handler.stopGame)
             {
@@ -519,79 +569,46 @@ namespace _HairSpring
 
 namespace hs
 {
-    struct DAT
+    // TCP datapack(unused)
+    struct datapack
     {
-        char image[HS_MAXN][HS_MAXN] = { 0 };
-        int color[HS_MAXN][HS_MAXN] = { 0 };
-    };
-    struct TXT
-    {
-        string text[HS_MAXN] = { 0 };
-        int color[HS_MAXN][HS_MAXN] = { 0 };
-    };
-    struct ATTRIBUTE
-    {
-        bool NoGravity = false;
-        bool NoClip = false;
-    };
-    struct PRELOADEDANIMATE
-    {
-        DAT* animate;
-    };
-    class actor
-    {
-    public:
-        COORD anchor;
-        ATTRIBUTE attr;
-
-        bool use_full_color = false;
-        int full_color = HS_COLOR_PUREWHITE;
-
-        bool use_animate = false;
-        bool pre_loaded_animate = false;
-    };
-    class actorIMG:actor
-    {
-    public:
-        DAT data;
-        DAT animate;
-    };
-    class actorTXT:actor
-    {
-    public:
-        TXT text;
-    };
-    class actorFILE :actor
-    {
-    public:
-        string imageFilePath;
-        string colorFilePath;
-
+        short sorcePort;
+        short destinationPort;
+        int seq;
+        int ack;
+        char dat;
+        char save;
+        bool u, a, p, r, s, f;
+        short window;
+        short check;
+        short emergency;
+        int option;
+        char fill;
     };
 
-    inline HWND getConsoleHWND()
+    HWND getConsoleHWND()
     {
         HWND hwnd;
         hwnd = FindWindow(L"ConsoleWindowClass", NULL);
         return hwnd;
     }
     // msgboxes
-    inline void msgbox(HWND hwnd, LPCSTR text, LPCSTR capt)
+    void msgbox(HWND hwnd, LPCSTR text, LPCSTR capt)
     {
         MessageBoxA(hwnd, text, capt, MB_OK);
         return;
     }
-    inline void msgboxS(HWND hwnd, LPCSTR text, LPCSTR capt)
+    void msgboxS(HWND hwnd, LPCSTR text, LPCSTR capt)
     {
         MessageBoxA(hwnd, text, capt, MB_OK | MB_SYSTEMMODAL);
         return;
     }
-    inline void Wrngbox(HWND hwnd, LPCSTR text, LPCSTR capt)
+    void Wrngbox(HWND hwnd, LPCSTR text, LPCSTR capt)
     {
         MessageBoxA(hwnd, text, capt, MB_OK | MB_SYSTEMMODAL | MB_ICONWARNING);
         return;
     }
-    inline void Errbox(HWND hwnd, LPCSTR text, LPCSTR capt)
+    void Errbox(HWND hwnd, LPCSTR text, LPCSTR capt)
     {
         MessageBoxA(hwnd, text, capt, MB_OK | MB_SYSTEMMODAL | MB_ICONHAND);
         return;
@@ -603,7 +620,7 @@ namespace hs
     /// display the correct text in others' computers).
     /// </summary>
     /// <param name="type">chcp type</param>
-    inline void chcp(string type)
+    void chcp(string type)
     {
         cmd("chcp " + type + ">nul");
         return;
@@ -615,10 +632,7 @@ namespace hs
 	/// <param name="y"></param>
 	inline void gotoxy(int x, int y)
 	{
-		COORD c;
-		c.X = x;
-		c.Y = y;
-		SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), c);
+        SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), {(short)x, (short)y});
 	}
     /// <summary>
     /// check if key <KEYCODE> is down
@@ -654,7 +668,7 @@ namespace hs
     /// <param name="filePath">path of the config file</param>
     /// <param name="name">name of the tag</param>
     /// <returns>value if success</returns>
-    inline bool readConfigBool(string filePath, string name)
+    bool readConfigBool(string filePath, string name)
     {
         return _HairSpring::readConfigBool(filePath, name);
     }
@@ -667,7 +681,7 @@ namespace hs
     /// <param name="filePath">path of the config file</param>
     /// <param name="name">name of the tag</param>
     /// <returns>value if success</returns>
-    inline int readConfigInt(string filePath, string name)
+    int readConfigInt(string filePath, string name)
     {
         return _HairSpring::readConfigInt(filePath, name);
     }
@@ -680,15 +694,15 @@ namespace hs
     /// <param name="filePath">path of the config file</param>
     /// <param name="name">name of the tag</param>
     /// <returns>value if success</returns>
-    inline string readConfigStr(string filePath, string name)
+    string readConfigStr(string filePath, string name)
     {
         return _HairSpring::readConfigStr(filePath, name);
     }
-    inline void setConsoleSize(int x, int y)
+    void setConsoleSize(int x, int y)
     {
         cmd("mode con cols=" + to_string(x) + " lines=" + to_string(y));
     }
-    inline void applyConfig(gmConfig config)
+    void applyConfig(gmConfig config)
     {
         chcp(cfg.consoleCHCP);
         setConsoleSize(cfg.consoleSizeX, cfg.consoleSizeY);
@@ -704,11 +718,11 @@ namespace hs
         MessageBoxA(NULL, reason.c_str(), cfg.windowName.c_str(), MB_OK | MB_ICONHAND | MB_SYSTEMMODAL);
         exit(-2);
     }
-    inline HANDLE getHandle()
+    HANDLE getHandle()
     {
         return GetStdHandle(STD_OUTPUT_HANDLE);
     }
-    inline COORD getCursorPos()
+    COORD getCursorPos()
     {
         COORD ans = { 0,0 };
         HANDLE hConsole = getHandle();
@@ -721,7 +735,7 @@ namespace hs
         }
         return ans;
     }
-    inline COORD getConsoleSize()
+    COORD getConsoleSize()
     {
         COORD ans = { 0,0 };
         HANDLE hConsole = hs::getHandle();
@@ -734,6 +748,441 @@ namespace hs
         }
         return ans;
     }
+    struct DAT
+    {
+        vector<string> image;
+        vector<int> imgInfoPinX;
+        vector<int> imgInfoPinY;
+        vector<string> color;
+    };
+    struct ATTRIBUTE
+    {
+        bool NoGravity = false;
+        bool NoClip = false;
+        bool use_animate = false;
+        bool pre_loaded_animate = false;
+        bool use_full_color = false;
+        int full_color = HS_COLOR_PUREWHITE;
+    };
+    struct PRELOADEDANIMATE
+    {
+        DAT* animate;
+    };
+    class actor
+    {
+    public:
+        COORD position = { 0,0 };
+        COORD lastPosition = position;
+        COORD anchor = { 0,0 };
+        ATTRIBUTE attr;
+        bool notChanged()
+        {
+            return position.X == lastPosition.X && position.Y == lastPosition.Y;
+        }
+    };
+    class actorIMG :public actor
+    {
+    public:
+        DAT data;
+        DAT animate;
+        void draw(COORD where)
+        {
+            // record last position
+            this->lastPosition = this->position;
+            // record the leg coord
+            COORD legCoord = hs::getCursorPos();
+            register int tmpColor;
+            if (this->attr.use_full_color)
+            {
+                _HairSpring::setTextColor(this->attr.full_color);
+            }
+            // draw actor
+            for (int i = 0; i < this->data.image.size(); ++i)
+            {
+                // goto target coord.
+                gotoxy(where.X + this->anchor.X + this->data.imgInfoPinX[i],
+                    where.Y + this->anchor.Y + this->data.imgInfoPinY[i]);
+                // if there's a color str then print it.
+                for (int j = 0; j < this->data.image[i].size(); ++j)
+                {
+                    // debug
+                    if (__HS_DBG_NOW_SHOW_HITBOX__)
+                    {
+                        printf("#");
+                        continue;
+                    }
+                    if (!(this->attr.use_full_color || this->data.color.empty()))
+                    {
+                        switch (this->data.color[i][j])
+                        {
+                        case 'w':
+                            tmpColor = HS_COLOR_PUREWHITE;
+                            break;
+                        case 'r':
+                            tmpColor = HS_COLOR_RED;
+                            break;
+                        case 'g':
+                            tmpColor = HS_COLOR_GREEN;
+                            break;
+                        case 'b':
+                            tmpColor = HS_COLOR_BLUE;
+                            break;
+                        case 'y':
+                            tmpColor = HS_COLOR_YELLOW;
+                            break;
+                        case 'p':
+                            tmpColor = HS_COLOR_PURPLE;
+                            break;
+                        case 'c':
+                            tmpColor = HS_COLOR_CYAN;
+                            break;
+                        default:
+                            tmpColor = HS_COLOR_PUREWHITE;
+                            break;
+                        }
+                        _HairSpring::setTextColor(tmpColor);
+                    }
+                    printf("%c", data.image[i][j]); // print
+                }
+                // else just print the text with targeted color.
+            };
+            // reset
+            hs::gotoxy(legCoord.X, legCoord.Y);
+            _HairSpring::setTextColor(HS_COLOR_PUREWHITE);
+        }
+        void remove(COORD lastCoord)
+        {
+            // record the leg coord
+            COORD legCoord = hs::getCursorPos();
+            // remove actor
+            for (int i = 0; i < this->data.image.size(); ++i)
+            {
+                // goto target coord.
+                gotoxy(lastCoord.X + this->anchor.X + this->data.imgInfoPinX[i],
+                    lastCoord.Y + this->anchor.Y + this->data.imgInfoPinY[i]);
+                for (int j = 0; j < this->data.image[i].size(); ++j)
+                {
+                    printf(" "); // print space to remove actor
+                }
+            }
+            // reset
+            hs::gotoxy(legCoord.X, legCoord.Y);
+        }
+    };
+    class actorFILE
+    {
+    public:
+        string imageFilePath;
+        /// <summary>
+        /// conver actorFile to actorIMG for rendering
+        /// </summary>
+        /// <param name="argc"></param>
+        /// <param name="argv"></param>
+        actorIMG to_IMG()
+        {
+            actorIMG ans;
+            fstream fin;
+            fin.open(this->imageFilePath);
+            if (fin.fail())
+            {
+                return ans;
+            }
+            char buffer[HS_MAXN] = "";
+            string tmp;
+            int temp = 0;
+            while (fin.peek() != EOF)
+            {
+                memset(buffer, '\0', sizeof(buffer));
+                fin.getline(buffer, sizeof(buffer));
+                if (!_strnicmp(buffer, ".NOTE ", 5))
+                {
+                    continue;
+                }
+                if (buffer == "")
+                {
+                    continue;
+                }
+                if (!_strnicmp(buffer, ".TEXT", 5))
+                {
+                    while(1)
+                    {
+                        ++temp;
+                        tmp = "";
+                        fin.getline(buffer, sizeof(buffer));
+                        tmp = this->check4modifers(buffer);
+                        if (tmp == "")
+                        {
+                            break;
+                        }
+                        ans.data.image.push_back(tmp);
+                    }
+                }
+                if (!_strnicmp(buffer, ".COLOR", 5))
+                {
+                    for (int i = 0; i < temp; ++i)
+                    {
+                        tmp = "";
+                        fin.getline(buffer, sizeof(buffer));
+                        for (int i = 0; i < strlen(buffer); ++i)
+                        {
+                            if (buffer[i] == ' ')
+                            {
+                                continue;
+                            }
+                            tmp += buffer[i];
+                        }
+                        ans.data.color.push_back(tmp);
+                    }
+                }
+                if (!_strnicmp(buffer, ".ANCHOR", 7))
+                {
+                    fin >> ans.anchor.X;
+                    fin >> ans.anchor.Y;
+                }
+                if (!_strnicmp(buffer, ".DISPLAY", 8))
+                {
+                    int a, b;
+                    for (int i = 0; i < temp; ++i)
+                    {
+                        fin >> a >> b;
+                        ans.data.imgInfoPinX.push_back(a);
+                        ans.data.imgInfoPinY.push_back(b);
+                    }
+                }
+            }
+            fin.close();
+            return ans;
+        }
+        /// <summary>
+        /// get config from a file actor
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        int getConfigInt(string name)
+        {
+            fstream fin;
+            fin.open(this->imageFilePath);
+            if (fin.fail())
+            {
+                fin.close();
+                return 0;
+            }
+            int ans = 0;
+            char buffer[HS_MAXN] = { "\0" };
+            while (_strnicmp(buffer, ".CFG", 5))
+            {
+                fin.getline(buffer, sizeof(buffer));
+                if (fin.eof())
+                {
+                    fin.close();
+                    return 0;
+                }
+            }
+            while (_strnicmp(buffer,name.c_str(),name.size()))
+            {
+                fin.getline(buffer, sizeof(buffer));
+                if (fin.eof())
+                {
+                    fin.close();
+                    return 0;
+                }
+            }
+            fin.close();
+            for (int i = (int)name.length() + 1; i < (int)strlen(buffer) - 1; ++i)
+            {
+                ans += buffer[i] - '0';
+                ans *= 10;
+            }
+            return ans;
+        }
+        /// <summary>
+        /// get config from a file actor
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        short getConfigShort(string name)
+        {
+            fstream fin;
+            fin.open(this->imageFilePath);
+            if (fin.fail())
+            {
+                fin.close();
+                return 0;
+            }
+            short ans = 0;
+            char buffer[HS_MAXN] = { "\0" };
+            while (_strnicmp(buffer, ".CFG", 5))
+            {
+                fin.getline(buffer, sizeof(buffer));
+                if (fin.eof())
+                {
+                    fin.close();
+                    return 0;
+                }
+            }
+            while (_strnicmp(buffer, name.c_str(), name.size()))
+            {
+                fin.getline(buffer, sizeof(buffer));
+                if (fin.eof())
+                {
+                    fin.close();
+                    return 0;
+                }
+            }
+            fin.close();
+            for (int i = (int)name.length() + 1; i < (int)strlen(buffer) - 1; ++i)
+            {
+                ans += buffer[i] - '0';
+                ans *= 10;
+            }
+            return ans;
+        }
+        /// <summary>
+        /// get config from a file actor
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="actor"></param>
+        /// <returns></returns>
+        bool getConfigBool(string name)
+        {
+            fstream fin;
+            fin.open(this->imageFilePath);
+            if (fin.fail())
+            {
+                fin.close();
+                return 0;
+            }
+            bool ans = false;
+            char buffer[HS_MAXN] = { "\0" };
+            while (_strnicmp(buffer, ".CFG", 5))
+            {
+                fin.getline(buffer, sizeof(buffer));
+                if (fin.eof())
+                {
+                    fin.close();
+                    return false;
+                }
+            }
+            while (_strnicmp(buffer, name.c_str(), name.size()))
+            {
+                fin.getline(buffer, sizeof(buffer));
+                if (fin.eof())
+                {
+                    fin.close();
+                    return false;
+                }
+            }
+            fin.close();
+            return (buffer[(int)name.length() + 1] == 't' || buffer[(int)name.length() + 1] == 'T')
+                ? true : false;
+        }
+        /// <summary>
+        /// get config from a file actor
+        /// </summary>
+        /// <param name="argc"></param>
+        /// <param name="argv"></param>
+        string getConfigStr(string name)
+        {
+            fstream fin;
+            fin.open(this->imageFilePath);
+            if (fin.fail())
+            {
+                fin.close();
+                return "";
+            }
+            string ans;
+            char buffer[HS_MAXN] = { "\0" };
+            while (_strnicmp(buffer, ".CFG", 5))
+            {
+                fin.getline(buffer, sizeof(buffer));
+                if (fin.eof())
+                {
+                    fin.close();
+                    return "";
+                }
+            }
+            while (_strnicmp(buffer, name.c_str(), name.size()))
+            {
+                fin.getline(buffer, sizeof(buffer));
+                if (fin.eof())
+                {
+                    fin.close();
+                    return "";
+                }
+            }
+            fin.close();
+            for (int i = (int)name.length() + 2; i < (int)strlen(buffer) - 1; ++i)
+            {
+                ans += buffer[i];
+            }
+            return ans;
+        }
+    private:
+        string check4modifers(char* buffer)
+        {
+            string ans;
+            int size = (int)strlen(buffer);
+            for (int i = 0; i < size; ++i)
+            {
+                // space
+                if (buffer[i] == ' ')
+                {
+                    continue;
+                }
+                if (size >= i + 1 && // $ -> space
+                    buffer[i] == '$' && buffer[i + 1] != '$')
+                {
+                    ans += ' ';
+                    continue;
+                }
+                if (size >= i && // $ but *end of line* -> 
+                    buffer[i] == '$')
+                {
+                    ans += ' ';
+                    continue;
+                }
+                if (size >= i + 1 && // $$ -> $
+                    buffer[i] == '$' && buffer[i + 1] == '$')
+                {
+                    ans += '$';
+                    ++i;
+                    continue;
+                }
+                if (size >= i + 1 && // .. -> .
+                    buffer[i] == '.' && buffer[i + 1] == ',')
+                {
+                    ans += '.';
+                    continue;
+                }
+                if (end(size, i, buffer))
+                {
+                    return "";
+                }
+                if (size >= i && // . but *end of line*
+                    buffer[i] == '.')
+                {
+                    ans += ',';
+                    continue;
+                }
+                ans += buffer[i];
+            }
+            return ans;
+        }
+        /// <summary>
+        /// .XXXX ?
+        /// </summary>
+        /// <param name="size"></param>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <returns></returns>
+        inline bool end(int size, int offset, char* buffer)
+        {
+            return (size >= offset + 1 && buffer[offset] == '.' && buffer[offset + 1] != '.')
+                ? true : false;
+        }
+    };
 }
 
 void config(int, char**);
@@ -747,8 +1196,10 @@ bool svrHeartBeat = true, cltHeartBeat = true;
 
 vector<hs::actor> actors;
 vector<hs::actorIMG> actorIMGs;
-vector<hs::actorTXT> actorTXTs;
 vector<hs::actorFILE> actorFILEs;
+
+queue<int> eventToServer;
+queue<int> eventToClient;
 
 /// <summary>
 /// server secondary control
@@ -805,6 +1256,10 @@ void Client(int argc, char** argv)
         if (!handler.pause.pauseClient)
         {
             loopClient(argc, argv);
+            if (cfg.debug && hs::keyPress(cfg.debugHitBox))
+            {
+                __HS_DBG_NOW_SHOW_HITBOX__ = !__HS_DBG_NOW_SHOW_HITBOX__;
+            }
             if (cfg.debug && hs::keyPress(cfg.debugKey))
             {
                 debugMode = !debugMode;
@@ -815,6 +1270,8 @@ void Client(int argc, char** argv)
                     hs::gotoxy(coord.X - 10, 0);
                     printf("          ");
                     hs::gotoxy(coord.X - 10, 1);
+                    printf("          ");
+                    hs::gotoxy(coord.X - 10, 2);
                     printf("          ");
                     hs::gotoxy(legCoord.X, legCoord.Y);
                 }
@@ -827,6 +1284,15 @@ void Client(int argc, char** argv)
                 printf("FPS:%d", dbgFPS);
                 hs::gotoxy(coord.X - 10, 1);
                 printf("TPS:%d", dbgTPS);
+                hs::gotoxy(coord.X - 10, 2);
+                if (__HS_DBG_NOW_SHOW_HITBOX__)
+                {
+                    printf("SHOWHITBOX");
+                }
+                else
+                {
+                    printf("          ");
+                }
                 hs::gotoxy(legCoord.X, legCoord.Y);
             }
         }
@@ -846,6 +1312,7 @@ void watchdog()
     clock_t lastHBClt = clock();
     while (!handler.stopGame)
     {
+        Sleep(2000);
         if (handler.pause.pauseClient)
         {
             lastHBClt = clock();
@@ -893,7 +1360,10 @@ int main(int argc, char* argv[])
     thread clt(Client, argc, argv);
     thread wd(watchdog);
     thread keylogger(_HairSpring::KeyCodeTracker);
-    while (!handler.stopGame);
+    while (!handler.stopGame)
+    {
+        Sleep(2000);
+    }
     int returnValue = exit(argc, argv);
     // end
     if (keylogger.joinable())
