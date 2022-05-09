@@ -2,7 +2,9 @@
 # HairSpring
 A 2D library for cpp console games,  
 based on a part of escapement.
-
+  
+we *probably* create a engine for it, once the lib has completed.  
+  
 # flowchart(sketch):
 ![flowchart](https://raw.githubusercontent.com/clockcpp/HairSpring/main/flowchart(sketch).png)
 
@@ -190,4 +192,4 @@ well i fixed this:)
 ☐ The game itself is a big terrarium for bugs  
   
 ## functions list:  
-- please wait, the engine is not completed.  
+- please wait, the library is not completed.  
