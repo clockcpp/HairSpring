@@ -101,7 +101,7 @@ using namespace hs;
 but be carefully when you use this, it may cause lots of bugs that caused by functions with the same name in a namespace
 
 btw i found a spelling mistake at ln 19 and im gonna corret it later.
-well i fixed this.
+well i fixed this:)
 
 ## For fun:
 ### ---{ Graphics }---  
