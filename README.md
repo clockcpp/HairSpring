@@ -4,7 +4,7 @@ A 2D library for cpp console games,
 based on a part of escapement.
 
 # flowchart(sketch):
-![https://raw.githubusercontent.com/clockcpp/HairSpring/main/flowchart(sketch).png](flowchart)
+![flowchart](https://raw.githubusercontent.com/clockcpp/HairSpring/main/flowchart(sketch).png)
 
 ## How to use it
 you need to include the file then use following format to write the cpp
