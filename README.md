@@ -102,7 +102,7 @@ but be carefully when you use this, it may cause lots of bugs that caused by fun
 
 btw i found a spelling mistake at ln 19 and im gonna corret it later.
 
-## for fun
+## For fun:
 ### ---{ Graphics }---  
 ☐ You forget what reality is  
 ☐ Beautiful  
@@ -110,11 +110,11 @@ btw i found a spelling mistake at ln 19 and im gonna corret it later.
 ☐ Decent  
 ☐ Bad  
 ☐ Don‘t look too long at it  
-☑ MS-DOS // significantly it does is MS-DOS, isn't it ¯\_(ツ)_/¯  
+☑ MS-DOS // Isn't it ¯\_(ツ)_/¯  
   
 ### ---{ Gameplay }---  
 ☐ Very good  
-☑ Good   // I don't think a console can do many thing as 3A games.  
+☑ Good   // I don't think a console can do many thing as 3A games, at least it never be "very good".  
 ☐ It's just gameplay  
 ☐ Mehh  
 ☐ Watch paint dry instead  
@@ -125,12 +125,12 @@ btw i found a spelling mistake at ln 19 and im gonna corret it later.
 ☐ Very good  
 ☐ Good  
 ☐ Not too bad  
-☑ Bad   // If I add some more functions, it won't be only "windows warning" sound later...  
+☑ Bad   // If I add some more functions or try fmod, OpenAL, etc , it won't be only "windows UAC" later...  
 ☐ I'm now deaf  
   
 ### ---{ Audience }---  
 ☐ Kids  
-☑ Teens // It's easy for C++ programmers or amateurs!(just recite the functions all the days(no!))  
+☑ Teens // It's easy for C++ programmers or amateurs!(just recite the functions all the days(no! god! please! NOOOO!))  
 ☑ Adults  
 ☐ Grandma  
   
@@ -173,7 +173,7 @@ btw i found a spelling mistake at ln 19 and im gonna corret it later.
 ☑ Long  
 ☑ To infinity and beyond  
   
-### ---{ Price }--- // the lib is under LGPL and completely free, but you may decide a price.  
+### ---{ Price }--- // the lib is under LGPL and completely free, but you may decide a price for your game.  
 ☑ It's free!  
 ☐ Worth the price  
 ☐ If it's on sale  
@@ -185,7 +185,7 @@ btw i found a spelling mistake at ln 19 and im gonna corret it later.
 ☐ Never heard of  
 ☑ Minor bugs  
 ☐ Can get annoying  
-☐ ARK: Survival Evolved  
+☐ ARK: Survival Evolved // btw when have ARK became a unit of bugs?   
 ☐ The game itself is a big terrarium for bugs  
   
 ## functions list:  
