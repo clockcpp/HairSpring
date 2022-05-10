@@ -1,4 +1,4 @@
-# INDEV: NOT support many functions in most engine currently
+# INDEV: When this is able to use, we will push as a release tag.
 # HairSpring
 A 2D library for cpp console games,  
 based on a part of escapement.
@@ -11,7 +11,7 @@ we *probably* create a engine for it, once the lib has completed.
 ## How to use it
 you need to include the file then use following format to write the cpp
 
-main file:
+main file:  
 __WARNING: THIS FILE IS OUTDATED AND REQUIRE UPDATING, PLEASE WAIT UNTIL THIS MESSAGE HAS BEEN REMOVED!__  
 ```cpp
 // HairSpring.cpp : This file contains function "main". some of '.text' is here...
