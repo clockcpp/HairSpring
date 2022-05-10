@@ -165,27 +165,27 @@ using namespace std;
 #define HS_CONSOLE_COLOR_GREEN			'2'
 #define HS_CONSOLE_COLOR_LIME			'3'
 #define HS_CONSOLE_COLOR_RED			'4'
-#define HS_CONSOLE_COLOR_PURPLE	    '5'
-#define HS_CONSOLE_COLOR_YELLOW	    '6'
+#define HS_CONSOLE_COLOR_PURPLE	        '5'
+#define HS_CONSOLE_COLOR_YELLOW	        '6'
 #define HS_CONSOLE_COLOR_WHITE			'7'
 #define HS_CONSOLE_COLOR_GRAY			'8'
 #define HS_CONSOLE_COLOR_AZURE			'9'
-#define HS_CONSOLE_COLOR_LITE_GREEN	'A'
+#define HS_CONSOLE_COLOR_LITE_GREEN     'A'
 #define HS_CONSOLE_COLOR_CYAN			'B'
 #define HS_CONSOLE_COLOR_LITE_RED		'C'
 #define HS_CONSOLE_COLOR_LITE_PURPLE	'D'
 #define HS_CONSOLE_COLOR_LITE_YELLOW	'E'
-#define HS_CONSOLE_COLOR_PURE_WHITE	'F'
-#define HS_CONSOLE_COLOR_RANDOM        'R'
+#define HS_CONSOLE_COLOR_PURE_WHITE 	'F'
+#define HS_CONSOLE_COLOR_RANDOM         'R'
 // text colors
 #define HS_COLOR_PUREWHITE				0
 #define	HS_COLOR_RED					1
 #define HS_COLOR_GREEN					2
 #define HS_COLOR_BLUE					3
-#define HS_COLOR_YELLOW		    	4
-#define HS_COLOR_PURPLE			    5
+#define HS_COLOR_YELLOW		    	    4
+#define HS_COLOR_PURPLE			        5
 #define HS_COLOR_CYAN					6
-#define HS_COLOR_RANDOM                7
+#define HS_COLOR_RANDOM                 7
 
 #define HS_CHCP_US                     "437"
 #define HS_CHCP_MULT                   "850"
@@ -244,6 +244,11 @@ struct gmConfig
     /// </summary>
     int gameMaxFPS = 60;
 
+    int max_sleep_time_server = 0;
+    int max_sleep_time_client = 0;
+    int max_sleep_time_watchdog = 1000;
+    int max_sleep_time_main = 1000;
+
     /// <summary>
     /// the task will never be kill by watchdog, when this is false, the "watchdog_timer" 
     /// will also be disabled
@@ -268,6 +273,10 @@ struct gmConfig
     /// (only work when you draw it again)
     /// </summary>
     int debugHitBox = KEY_F4;
+    /// <summary>
+    /// don't hide cursor
+    /// </summary>
+    bool debugCursor = true;
 } cfg;
 struct gamePause
 {
@@ -702,11 +711,32 @@ namespace hs
     {
         cmd("mode con cols=" + to_string(x) + " lines=" + to_string(y));
     }
+    /// <summary>
+    /// show cursor on the console?
+    /// </summary>
+    /// <param name="state">true: show; false: dont show</param>
+    /// <returns>N/A</returns>
+    void showCursor(bool state)
+    {
+        // get buffer handle
+        HANDLE hOutput;
+        COORD coord = { 0, 0 };
+        hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+        // hide cursor
+        CONSOLE_CURSOR_INFO cci;
+        cci.bVisible = state;
+        cci.dwSize = 1;
+        SetConsoleCursorInfo(hOutput, &cci);
+    }
     void applyConfig(gmConfig config)
     {
         chcp(cfg.consoleCHCP);
         setConsoleSize(cfg.consoleSizeX, cfg.consoleSizeY);
         cmd("title " + cfg.windowName);
+        if (!cfg.debug || (cfg.debug && !cfg.debugCursor))
+        {
+            showCursor(0);
+        }
     }
     inline void mav(string reason)
     {
@@ -754,6 +784,7 @@ namespace hs
         vector<int> imgInfoPinX;
         vector<int> imgInfoPinY;
         vector<string> color;
+        vector<string> hitbox;
     };
     struct ATTRIBUTE
     {
@@ -772,10 +803,10 @@ namespace hs
     {
     public:
         COORD position = { 0,0 };
-        COORD lastPosition = position;
+        COORD lastPosition = { 0,0 };
         COORD anchor = { 0,0 };
         ATTRIBUTE attr;
-        bool notChanged()
+        inline bool notChanged()
         {
             return position.X == lastPosition.X && position.Y == lastPosition.Y;
         }
@@ -796,6 +827,16 @@ namespace hs
             {
                 _HairSpring::setTextColor(this->attr.full_color);
             }
+            if (__HS_DBG_NOW_SHOW_HITBOX__)
+            {
+                for (int i = 0; i < this->data.hitbox.size(); ++i)
+                {
+                    gotoxy(where.X + this->anchor.X,
+                        where.Y + this->anchor.Y + i);
+                    printf("%s", this->data.hitbox[i].c_str());
+                }
+                goto end; // jump "drawing actor", continue.
+            }
             // draw actor
             for (int i = 0; i < this->data.image.size(); ++i)
             {
@@ -805,12 +846,6 @@ namespace hs
                 // if there's a color str then print it.
                 for (int j = 0; j < this->data.image[i].size(); ++j)
                 {
-                    // debug
-                    if (__HS_DBG_NOW_SHOW_HITBOX__)
-                    {
-                        printf("#");
-                        continue;
-                    }
                     if (!(this->attr.use_full_color || this->data.color.empty()))
                     {
                         switch (this->data.color[i][j])
@@ -847,6 +882,7 @@ namespace hs
                 // else just print the text with targeted color.
             };
             // reset
+            end:
             hs::gotoxy(legCoord.X, legCoord.Y);
             _HairSpring::setTextColor(HS_COLOR_PUREWHITE);
         }
@@ -855,6 +891,20 @@ namespace hs
             // record the leg coord
             COORD legCoord = hs::getCursorPos();
             // remove actor
+
+            if (__HS_DBG_NOW_SHOW_HITBOX__)
+            {
+                for (int i = 0; i < this->data.hitbox.size(); ++i)
+                {
+                    gotoxy(lastCoord.X + this->anchor.X,
+                        lastCoord.Y + this->anchor.Y + i);
+                    for (int j = 0; j < this->data.hitbox[i].size(); ++j)
+                    {
+                        printf(" ");
+                    }
+                }
+                goto end; // jump "removing actor", continue.
+            }
             for (int i = 0; i < this->data.image.size(); ++i)
             {
                 // goto target coord.
@@ -866,6 +916,7 @@ namespace hs
                 }
             }
             // reset
+            end:
             hs::gotoxy(legCoord.X, legCoord.Y);
         }
     };
@@ -915,6 +966,23 @@ namespace hs
                             break;
                         }
                         ans.data.image.push_back(tmp);
+                    }
+                }
+                if (!_strnicmp(buffer, ".HITBOX", 7))
+                {
+                    while (1)
+                    {
+                        tmp = "";
+                        fin.getline(buffer, sizeof(buffer));
+                        if (this->end((int)strlen(buffer), 0, buffer))
+                        {
+                            break;
+                        }
+                        for (int i = 0; i < strlen(buffer); ++i)
+                        {
+                            tmp += buffer[i] == '#' ? '#' : ' ';
+                        }
+                        ans.data.hitbox.push_back(tmp);
                     }
                 }
                 if (!_strnicmp(buffer, ".COLOR", 5))
@@ -1183,6 +1251,36 @@ namespace hs
                 ? true : false;
         }
     };
+
+    /// <summary>
+    /// create a actor from a actor file
+    /// </summary>
+    /// <param name="filePath">the path of the file</param>
+    /// <returns>the img of the actor</returns>
+    actorIMG createActorFromFile(string filePath)
+    {
+        actorIMG ans;
+        actorFILE ansF;
+        ansF.imageFilePath = filePath;
+        ans = ansF.to_IMG();
+        ans.position =
+        { ansF.getConfigShort("InitialPositionX"),
+            ansF.getConfigShort("InitialPositionY") };
+        return ans;
+    }
+}
+vector<hs::actorIMG> actorIMGs;
+namespace hs
+{
+    /// <summary>
+    /// register a actorIMG to the list
+    /// </summary>
+    /// <param name="target">the ID of targeting actorIMG.</param>
+    inline int registerActorIMG(actorIMG target)
+    {
+        actorIMGs.push_back(target);
+        return actorIMGs.size();
+    }
 }
 
 void config(int, char**);
@@ -1193,10 +1291,6 @@ int exit(int, char**);
 
 int dbgFPS = 0, dbgTPS = 0;
 bool svrHeartBeat = true, cltHeartBeat = true;
-
-vector<hs::actor> actors;
-vector<hs::actorIMG> actorIMGs;
-vector<hs::actorFILE> actorFILEs;
 
 queue<int> eventToServer;
 queue<int> eventToClient;
@@ -1213,7 +1307,10 @@ void Server(int argc, char** argv)
     register clock_t delaySvr = 1000 / cfg.gameTPS;
     while (!handler.stopGame)
     {
-        while (clock() - lastTimeSvr < delaySvr);
+        while (clock() - lastTimeSvr < delaySvr)
+        {
+            Sleep(cfg.max_sleep_time_server);
+        }
         svrHeartBeat = true;
         if (cfg.debug)
         {
@@ -1244,7 +1341,10 @@ void Client(int argc, char** argv)
     register bool debugMode = false;
     while (!handler.stopGame)
     {
-        while (clock() - lastTimeClt < delayClt);
+        while (clock() - lastTimeClt < delayClt)
+        {
+            Sleep(cfg.max_sleep_time_client);
+        }
         cltHeartBeat = true;
         if (cfg.debug)
         {
@@ -1312,7 +1412,7 @@ void watchdog()
     clock_t lastHBClt = clock();
     while (!handler.stopGame)
     {
-        Sleep(2000);
+        Sleep(cfg.max_sleep_time_watchdog);
         if (handler.pause.pauseClient)
         {
             lastHBClt = clock();
@@ -1362,7 +1462,7 @@ int main(int argc, char* argv[])
     thread keylogger(_HairSpring::KeyCodeTracker);
     while (!handler.stopGame)
     {
-        Sleep(2000);
+        Sleep(cfg.max_sleep_time_main);
     }
     int returnValue = exit(argc, argv);
     // end
