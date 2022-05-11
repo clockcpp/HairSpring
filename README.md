@@ -130,7 +130,7 @@ well i fixed this:)
 ☐ Very good  
 ☐ Good  
 ☐ Not too bad  
-☑ Bad   // If I add some more functions or try fmod, OpenAL, etc , it won't be only "windows UAC" later...  
+☑ Bad   // You can only create beep or play a audio file at one time until I've solve the problem between playsound and wmi-str. I may try openAL or fmod later.  
 ☐ I'm now deaf  
   
 ### ---{ Audience }---  
