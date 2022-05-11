@@ -722,7 +722,7 @@ namespace hs
         HANDLE hOutput;
         COORD coord = { 0, 0 };
         hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-        // hide cursor
+        // change visibility of the cursor
         CONSOLE_CURSOR_INFO cci;
         cci.bVisible = state;
         cci.dwSize = 1;
@@ -877,9 +877,13 @@ namespace hs
                         }
                         _HairSpring::setTextColor(tmpColor);
                     }
+                    else
+                    {
+                         // else just print the text with targeted color.
+                        _HairSpring::setTextColor(this->attr.full_color);
+                    }
                     printf("%c", data.image[i][j]); // print
                 }
-                // else just print the text with targeted color.
             };
             // reset
             end:
@@ -918,6 +922,12 @@ namespace hs
             // reset
             end:
             hs::gotoxy(legCoord.X, legCoord.Y);
+        }
+        void teleport(COORD where)
+        {
+            this->position = where;
+            this->remove(this->lastPosition);
+            this->draw(this->position);
         }
     };
     class actorFILE
@@ -1270,6 +1280,41 @@ namespace hs
     }
 }
 vector<hs::actorIMG> actorIMGs;
+class HS_actorsHandler
+{
+public:
+    inline hs::actorIMG getActorByID(int ID)
+    {
+        return actorIMGs[ID];
+    }
+    inline int getCountTotal()
+    {
+        return actorIMGs.size();
+    }
+    inline void removeByID(int ID)
+    {
+        actorIMGs.erase(actorIMGs.begin() + ID);
+        return;
+    }
+    void removeAll()
+    {
+        actorIMGs.clear();
+        return;
+    }
+    /// <summary>
+    /// this only redraw the actors by id order
+    /// It's also works well for actors that threaded-up with each other
+    /// </summary>
+    void redrawAll()
+    {
+        for (int i = 0; i < actorIMGs.size(); ++i)
+        {
+            actorIMGs[i].remove(actorIMGs[i].lastPosition);
+            actorIMGs[i].draw(actorIMGs[i].position);
+        }
+        return;
+    }
+} actorHandler;
 namespace hs
 {
     /// <summary>
