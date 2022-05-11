@@ -140,7 +140,9 @@ well i fixed this:)
 ☐ Grandma  
   
 ### ---{ PC Requirements }--- // you will deside the TPS and FPS, the more TPS and FPS, the more CPU use.  
-☐ Check if you can run paint  // unfortunately there's lots of problem between process communication, so it take a lot of CPU calculations currently.I'm attempting to optimize it all the day and I may find a solution later.
+☐ Check if you can run paint  
+// unfortunately there's lots of problem between process communication, so it take a lot of CPU calculations currently.  
+// I'm attempting to optimize it all the day and I may find a solution later.  
 ☑ Potato  
 ☑ Decent  
 ☑ Fast  
