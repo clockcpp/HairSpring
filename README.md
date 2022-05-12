@@ -102,7 +102,7 @@ or you may use following code to omit the "hs::"
 ```cpp
 using namespace hs;
 ```
-but be carefully when you use this, it may cause lots of bugs that caused by functions with the same name in a namespace
+but be carefully when you use this, it may cause lots of functions with the same name in the source code
 
 btw i found a spelling mistake at ln 19 and im gonna corret it later.  
 well i fixed this:)  
