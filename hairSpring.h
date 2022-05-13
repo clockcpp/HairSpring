@@ -802,14 +802,12 @@ namespace hs
         vector<int> imgInfoPinX;
         vector<int> imgInfoPinY;
         vector<string> color;
-        vector<string> hitbox;
+        COORD hitbox[4] = { 0 };
     };
     struct ATTRIBUTE
     {
         bool NoGravity = false;
         bool NoClip = false;
-        bool use_animate = false;
-        bool pre_loaded_animate = false;
         bool use_full_color = false;
         int full_color = HS_COLOR_PUREWHITE;
     };
@@ -847,11 +845,27 @@ namespace hs
             }
             if (__HS_DBG_NOW_SHOW_HITBOX__)
             {
-                for (int i = 0; i < this->data.hitbox.size(); ++i)
+                gotoxy(where.X + this->anchor.X + this->data.hitbox[0].X,
+                    where.Y + this->anchor.Y + this->data.hitbox[0].Y);
+                for (int i = this->data.hitbox[0].X; i < this->data.hitbox[1].X; ++i)
                 {
-                    gotoxy(where.X + this->anchor.X,
-                        where.Y + this->anchor.Y + i);
-                    printf("%s", this->data.hitbox[i].c_str());
+                    printf("#");
+                }
+                gotoxy(where.X + this->anchor.X + this->data.hitbox[2].X,
+                    where.Y + this->anchor.Y + this->data.hitbox[2].Y);
+                for (int i = this->anchor.X + this->data.hitbox[2].X; i <= this->anchor.X + this->data.hitbox[3].X; ++i)
+                {
+                    printf("#");
+                }
+                for (int i = where.Y + this->data.hitbox[0].Y; i < where.Y + this->data.hitbox[2].Y; ++i)
+                {
+                    gotoxy(where.X + this->anchor.X + this->data.hitbox[0].X, i);
+                    printf("#");
+                }
+                for (int i = where.Y + this->data.hitbox[1].Y; i < where.Y + this->data.hitbox[3].Y; ++i)
+                {
+                    gotoxy(where.X + this->anchor.X + this->data.hitbox[1].X, i);
+                    printf("#");
                 }
                 goto end; // jump "drawing actor", continue.
             }
@@ -908,7 +922,7 @@ namespace hs
             hs::gotoxy(legCoord.X, legCoord.Y);
             _HairSpring::setTextColor(HS_COLOR_PUREWHITE);
         }
-        void remove(COORD lastCoord)
+        void remove(COORD where)
         {
             // record the leg coord
             COORD legCoord = hs::getCursorPos();
@@ -916,11 +930,12 @@ namespace hs
 
             if (__HS_DBG_NOW_SHOW_HITBOX__)
             {
-                for (int i = 0; i < this->data.hitbox.size(); ++i)
+                for (int i = where.Y + this->anchor.Y + this->data.hitbox[0].Y;
+                    i <= where.Y + this->anchor.Y + this->data.hitbox[2].Y;
+                    ++i)
                 {
-                    gotoxy(lastCoord.X + this->anchor.X,
-                        lastCoord.Y + this->anchor.Y + i);
-                    for (int j = 0; j < this->data.hitbox[i].size(); ++j)
+                    gotoxy(where.X + this->anchor.X + this->data.hitbox[0].X, i);
+                    for (int j = this->data.hitbox[0].X; j <= this->data.hitbox[1].X; ++j)
                     {
                         printf(" ");
                     }
@@ -930,8 +945,8 @@ namespace hs
             for (int i = 0; i < this->data.image.size(); ++i)
             {
                 // goto target coord.
-                gotoxy(lastCoord.X + this->anchor.X + this->data.imgInfoPinX[i],
-                    lastCoord.Y + this->anchor.Y + this->data.imgInfoPinY[i]);
+                gotoxy(where.X + this->anchor.X + this->data.imgInfoPinX[i],
+                    where.Y + this->anchor.Y + this->data.imgInfoPinY[i]);
                 for (int j = 0; j < this->data.image[i].size(); ++j)
                 {
                     printf(" "); // print space to remove actor
@@ -998,19 +1013,9 @@ namespace hs
                 }
                 if (!_strnicmp(buffer, ".HITBOX", 7))
                 {
-                    while (1)
+                    for (int i = 0; i < 4; ++i)
                     {
-                        tmp = "";
-                        fin.getline(buffer, sizeof(buffer));
-                        if (this->end((int)strlen(buffer), 0, buffer))
-                        {
-                            break;
-                        }
-                        for (int i = 0; i < strlen(buffer); ++i)
-                        {
-                            tmp += buffer[i] == '#' ? '#' : ' ';
-                        }
-                        ans.data.hitbox.push_back(tmp);
+                        fin >> ans.data.hitbox[i].X >> ans.data.hitbox[i].Y;
                     }
                 }
                 if (!_strnicmp(buffer, ".COLOR", 5))
@@ -1307,21 +1312,40 @@ public:
     }
     inline int getCountTotal()
     {
-        return actorIMGs.size();
+        return (int)actorIMGs.size();
     }
     inline void removeByID(int ID)
     {
         actorIMGs.erase(actorIMGs.begin() + ID);
         return;
     }
+    /// <summary>
+    /// clear the actors,
+    /// all ids will be unavailable
+    /// </summary>
     void removeAll()
     {
         actorIMGs.clear();
         return;
     }
+    void eraseAll()
+    {
+        for (int i = 0; i < actorIMGs.size(); ++i)
+        {
+            actorIMGs[i].remove(actorIMGs[i].lastPosition);
+        }
+        return;
+    }
+    void drawAll()
+    {
+        for (int i = 0; i < actorIMGs.size(); ++i)
+        {
+            actorIMGs[i].draw(actorIMGs[i].position);
+        }
+        return;
+    }
     /// <summary>
     /// this only redraw the actors by id order
-    /// It's also works well for actors that threaded-up with each other
     /// </summary>
     void redrawAll()
     {
@@ -1331,6 +1355,87 @@ public:
             actorIMGs[i].draw(actorIMGs[i].position);
         }
         return;
+    }
+    bool threadedUpWith(int thisID, int targID)
+    {
+        if (thisID == targID)
+        {
+            return false;
+        }
+        if (actorIMGs.size() < thisID || actorIMGs.size() < targID)
+        {
+            return false;
+        }
+        if (actorIMGs[thisID].position.X == actorIMGs[targID].position.X &&
+            actorIMGs[thisID].position.Y == actorIMGs[targID].position.Y)
+        {
+            return true;
+        }
+
+        bool flag = false;
+
+        register COORD thisbox[4] =
+        {
+            actorIMGs[thisID].data.hitbox[0],
+            actorIMGs[thisID].data.hitbox[1],
+            actorIMGs[thisID].data.hitbox[2],
+            actorIMGs[thisID].data.hitbox[3]
+        };
+        register COORD targbox[4] =
+        {
+            actorIMGs[targID].data.hitbox[0],
+            actorIMGs[targID].data.hitbox[1],
+            actorIMGs[targID].data.hitbox[2],
+            actorIMGs[targID].data.hitbox[3]
+        };
+
+        for (int i = 0; i < 4; ++i)
+        {
+            thisbox[i].X += actorIMGs[thisID].position.X;
+            thisbox[i].Y += actorIMGs[thisID].position.Y;
+            thisbox[i].X += actorIMGs[thisID].anchor.X;
+            thisbox[i].Y += actorIMGs[thisID].anchor.Y;
+            
+            targbox[i].X += actorIMGs[targID].position.X;
+            targbox[i].Y += actorIMGs[targID].position.Y;
+            targbox[i].X += actorIMGs[targID].anchor.X;
+            targbox[i].Y += actorIMGs[targID].anchor.Y;
+        }
+
+        for (int i = 0; i < 4; ++i)
+        {
+            flag |= (
+                thisbox[0].X <= targbox[i].X &&
+                thisbox[0].Y <= targbox[i].Y &&
+                thisbox[3].X >= targbox[i].X &&
+                thisbox[3].Y >= targbox[i].Y
+                );
+            flag |= (
+                targbox[0].X <= thisbox[i].X &&
+                targbox[0].Y <= thisbox[i].Y &&
+                targbox[3].X >= thisbox[i].X &&
+                targbox[3].Y >= thisbox[i].Y
+                );
+
+        }
+        return flag;
+    }
+    bool threadedUp(int thisID)
+    {
+        bool flag = false;
+        for (int i = 0; i < actorIMGs.size(); ++i)
+        {
+            if (thisID == i)
+            {
+                continue;
+            }
+            if (this->threadedUpWith(thisID, i))
+            {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
     }
 } actorHandler;
 namespace hs
@@ -1342,7 +1447,7 @@ namespace hs
     inline int registerActorIMG(actorIMG target)
     {
         actorIMGs.push_back(target);
-        return actorIMGs.size();
+        return (int)actorIMGs.size();
     }
 }
 
@@ -1421,7 +1526,9 @@ void Client(int argc, char** argv)
             loopClient(argc, argv);
             if (cfg.debug && hs::keyPress(cfg.debugHitBox))
             {
+                actorHandler.eraseAll();
                 __HS_DBG_NOW_SHOW_HITBOX__ = !__HS_DBG_NOW_SHOW_HITBOX__;
+                actorHandler.drawAll();
             }
             if (cfg.debug && hs::keyPress(cfg.debugKey))
             {
