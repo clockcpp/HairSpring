@@ -13,7 +13,8 @@ we *probably* create a engine for it, once the lib has completed.
 you need to include the file then use following format to write the cpp
 
 main file:  
-__WARNING: THIS FILE IS OUTDATED AND REQUIRE UPDATING, PLEASE WAIT UNTIL THIS MESSAGE HAS BEEN REMOVED!__  
+__WARNING: THIS FILE IS OUTDATED AND REQUIRE UPDATING, PLEASE WAIT UNTIL THIS MESSAGE HAS BEEN REMOVED!__    
+you may see relese: v-1.0.0-example-balls as example.  
 ```cpp
 // HairSpring.cpp : This file contains function "main". some of '.text' is here...
 //
