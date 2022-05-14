@@ -260,6 +260,8 @@ struct gmConfig
     /// </summary>
     long watchdog_timer = 20000;
 
+    bool noQuickEditMode = true;
+
     /// <summary>
     /// debug or release?
     /// </summary>
@@ -578,23 +580,6 @@ namespace _HairSpring
 
 namespace hs
 {
-    // TCP datapack(unused)
-    struct datapack
-    {
-        short sorcePort;
-        short destinationPort;
-        int seq;
-        int ack;
-        char dat;
-        char save;
-        bool u, a, p, r, s, f;
-        short window;
-        short check;
-        short emergency;
-        int option;
-        char fill;
-    };
-
     HWND getConsoleHWND()
     {
         HWND hwnd;
@@ -634,6 +619,18 @@ namespace hs
         cmd("chcp " + type + ">nul");
         return;
     }
+    void noQuickEdit()
+    {
+        HANDLE hStdin = GetStdHandle(STD_INPUT_HANDLE);
+        DWORD mode;
+        GetConsoleMode(hStdin, &mode);
+        mode &= ~ENABLE_QUICK_EDIT_MODE;
+        mode &= ~ENABLE_INSERT_MODE;
+        mode |= ENABLE_MOUSE_INPUT;
+        SetConsoleMode(hStdin, mode);
+        return;
+    }
+
 	/// <summary>
 	/// goto a coord of the console
 	/// </summary>
@@ -754,6 +751,10 @@ namespace hs
         if (!cfg.debug || (cfg.debug && !cfg.debugCursor))
         {
             showCursor(0);
+        }
+        if (cfg.noQuickEditMode)
+        {
+            noQuickEdit();
         }
     }
     inline void mav(string reason)
