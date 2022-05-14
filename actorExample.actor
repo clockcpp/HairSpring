@@ -1,0 +1,100 @@
+.NOTE This is a note
+.NOTE this line will be ignored
+.NOTE 
+.NOTE File format:
+.NOTE use "$" instead space,
+.NOTE use "$$" as "$"
+.NOTE use "." as a TYPE(.XXX)
+.NOTE use ".." as "."
+.NOTE 
+.NOTE All black lines will be ignored;
+.NOTE All notes will be ignored;
+.NOTE All spaces will be ignored.
+.NOTE 
+.NOTE 
+.NOTE 
+.NOTE 		TYPE FORMATS:
+.NOTE 
+.NOTE ".TEXT":		:		Display of actor
+.NOTE ".ANCHOR"		:		Anchor point of the actor
+.NOTE ".DISPLAY"	:		The display offset of the actor(from anchor)(per line)
+.NOTE ".COLOR"		:		Color of every symbol of the actor
+.NOTE 							WHITE	:	'w'
+.NOTE 							RED		:	'r'
+.NOTE 							GREEN	:	'g'
+.NOTE 							BLUE	:	'b'
+.NOTE 							YELLOW	:	'y'
+.NOTE 							PURPLE	:	'p'
+.NOTE 							CYAN	:	'c'
+.NOTE 						We PROBABLY add HEX support for this, but
+.NOTE 							we are not developing this currently.
+.NOTE 						Once we've completed the engine, we may
+.NOTE 							start do this.
+.NOTE 						At least we know there's about 200 kinds
+.NOTE 							of color we gonna support, after that
+.NOTE 							we will change str(like 'w') to int(like 123)
+.NITE 							format.
+.NOTE ".CFG"		:		extra configs
+.NOTE 						Read with getConfigInt(), getConfigBool(),
+.NOTE 						 getConfigStr and getConfigShort(for COORDs)
+.NOTE 							int		:	NAME=VALUE
+.NOTE 							short	:	NAME=VALUE
+.NOTE 							bool	:	NAME=true/false
+.NOTE 							string	:	NAME="VALUE"
+.NOTE 							Program WON'T ignore spaces
+.NOTE 							inside double quotes under ".CFG" or ".HITBOX"
+.NOTE ".HITBOX"		:		hitbox config, a box, four corners
+.NOTE ".EOF"		:		End of file, you may take it unless you are sure
+.NOTE 							that you are writing the .XXX as the correct
+.NOTE 							oreder, you'd better take this.
+.NOTE 
+.NOTE The following example will show a actor like this:
+.NOTE Displays(.TEXT + .DISPLAY + .COLOR):
+.NOTE \o/
+.NOTE  |
+.NOTE / \
+.NOTE (the head is colord as blue)
+.NOTE 
+.NOTE Hitbox(for detecting):
+.NOTE #####
+.NOTE #   #
+.NOTE #   #
+.NOTE #   #
+.NOTE #####
+.NOTE 
+.NOTE Anchor(the position of the actor):
+.NOTE for this example it's at (0, 0)
+.NOTE Anchor --> [\] o/
+.NOTE                |
+.NOTE               / \
+.NOTE 
+.NOTE Initial Position(if you use createActorFromFile())
+.NOTE (10, 10) of the console.
+
+.TEXT
+\o/
+ |
+/$\
+
+.COLOR
+wbw
+ w
+www
+
+.HITBOX
+0 0		3 0
+0 3		3 3
+
+.ANCHOR
+0 0
+
+.DISPLAY
+0 0
+1 1
+0 2
+
+.CFG
+InitialPositionX=10
+InitialPositionY=10
+
+.EOF
