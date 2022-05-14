@@ -843,7 +843,7 @@ namespace hs
             {
                 _HairSpring::setTextColor(this->attr.full_color);
             }
-            if (__HS_DBG_NOW_SHOW_HITBOX__)
+            if (__HS_DBG_NOW_SHOW_HITBOX__ && !this->attr.NoClip)
             {
                 gotoxy(where.X + this->anchor.X + this->data.hitbox[0].X,
                     where.Y + this->anchor.Y + this->data.hitbox[0].Y);
@@ -1363,6 +1363,10 @@ public:
             return false;
         }
         if (actorIMGs.size() < thisID || actorIMGs.size() < targID)
+        {
+            return false;
+        }
+        if (actorIMGs[thisID].attr.NoClip || actorIMGs[targID].attr.NoClip)
         {
             return false;
         }
