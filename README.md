@@ -1,4 +1,4 @@
-# INDEV: When this is able to use, we will push as a release tag.
+# INDEV: This library is not completely completed and we are making more features for it.
 # HairSpring
 A 2D library for cpp console games,  
 based on a part of escapement.
