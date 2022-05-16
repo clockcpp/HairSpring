@@ -5,12 +5,12 @@ based on a part of escapement.
   
 we *probably* create a engine for it, once the lib has completed.  
   
-# updates:
+# When a update has been pushed, what does it means?
 - inside repo: only tested the latest features by myself
 - DEV release: only tested by myself
 - ALPHA release: only created a game by myself
 - BETA release: QA tested.
-- PRE release: QA&Security tested.
+- PRE release: full tested.
 - release: everything is OK.
   
 # flowchart(sketch):
