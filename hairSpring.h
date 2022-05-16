@@ -903,6 +903,7 @@ namespace hs
                 cerr << "\nIf you cannot fix this problem yourself, go https://github.com/clockcpp/HairSpring/discussions to look for the same problem. If there's nothing, create a new general duscussion for help;\nIf you are sure this is a issue, go https://github.com/clockcpp/HairSpring/issues for help.\n---PRESS ANY KEY TO EXIT---";
             }
             cmd("pause >nul");
+            exit(-2);
             break;
         }
 
