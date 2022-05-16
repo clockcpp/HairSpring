@@ -174,7 +174,7 @@ well i fixed this:)
 ☑ Too much grind  
 ☑ You'll need a second life for grinding  
   
-### ---{ Story }--- // you can make painball, adventure, story type game and more!
+### ---{ Story }--- // you can make paintball, adventure, story type game and more!
 ☑ No Story  
 ☑ Some lore  
 ☑ Average  
