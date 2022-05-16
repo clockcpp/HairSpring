@@ -80,6 +80,8 @@ void init(int argc, char* argv[])
 
 // IF you do decide only use one of following function for both calculation and rendering, 
 // you may COMPLETELY mess the game up
+// put some calculations in server, that will be easier for you to pause the game by
+// set handler.pause.pauseServer to true.
 
 // this function run in another thread, and loop until it exit(in this
 // case we use esc to exit)
