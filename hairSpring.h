@@ -207,6 +207,14 @@ using namespace std;
 #define ___HSDef___
 #endif
 
+#ifndef MOUSEs
+#define MOUSE_LEFT      0x01
+#define MOUSE_RIGHT     0x02
+#define MOUSE_MID       0x03
+
+#define MOUSEs true
+#endif
+
 map<int, bool> keyCodeTrackerLIB;
 
 bool __HS_DBG_NOW_SHOW_HITBOX__ = false;
@@ -580,6 +588,57 @@ namespace _HairSpring
 
 namespace hs
 {
+    class Box
+    {
+    public:
+        COORD x0y0 = { -1,-1 };
+        COORD x0y1 = { -1,-1 };
+        COORD x1y0 = { -1,-1 };
+        COORD x1y1 = { -1,-1 };
+        void to_box(COORD a, COORD b)
+        {
+            if (a.X == b.X || a.Y == b.Y)
+            {
+                return;
+            }
+            this->x0y0 = { min(a.X,b.X),min(a.Y,b.Y) };
+            this->x0y1 = { min(a.X,b.X),max(a.Y,b.Y) };
+            this->x1y0 = { max(a.X,b.X),min(a.Y,b.Y) };
+            this->x1y1 = { max(a.X,b.X),max(a.Y,b.Y) };
+        }
+        bool insideBox(COORD targ)
+        {
+            if (this->x0y0.X <= targ.X && this->x1y1.X >= targ.X &&
+                this->x0y0.Y <= targ.Y && this->x1y1.Y >= targ.Y)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
+        bool is_valid()
+        {
+            if (this->x0y0.X == -1 || this->x0y0.Y == -1)
+            {
+                return 0;
+            }
+            if (this->x0y1.X == -1 || this->x0y1.Y == -1)
+            {
+                return 0;
+            }
+            if (this->x1y0.X == -1 || this->x1y0.Y == -1)
+            {
+                return 0;
+            }
+            if (this->x1y1.X == -1 || this->x1y1.Y == -1)
+            {
+                return 0;
+            }
+            return 1;
+        }
+    };
     HWND getConsoleHWND()
     {
         HWND hwnd;
@@ -797,6 +856,91 @@ namespace hs
         }
         return ans;
     }
+    /// <summary>
+    /// get the position of mouse.
+    /// </summary>
+    /// <returns>ans(COORD)</returns>
+    COORD getMousePosition()
+    {
+        // thanks *anonymoususer__* at CSDN
+        COORD ans = { -1,-1 };
+        HWND h = GetForegroundWindow();
+        HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
+        CONSOLE_FONT_INFO consoleCurrentFont;
+        POINT p;
+        GetCursorPos(&p);
+        ScreenToClient(h, &p);
+        GetCurrentConsoleFont(hOutput, FALSE, &consoleCurrentFont);
+        ans.X = p.x /= consoleCurrentFont.dwFontSize.X;
+        ans.Y = p.y /= consoleCurrentFont.dwFontSize.Y;
+        COORD size = getConsoleSize();
+        if (ans.X >= 0 && ans.Y >= 0 && ans.X <= size.X && ans.Y <= ans.Y)
+        {
+            return ans;
+        }
+        return { -1,-1 };
+    }
+    /// <summary>
+    /// return true if mouse is down
+    /// </summary>
+    /// <param name="key">which key</param>
+    /// <returns>ans</returns>
+    inline bool mouseDown(int key)
+    {
+        return keyDown(key);
+    }
+    /// <summary>
+    /// if mouse pressed in the box
+    /// <param name="key">which key</param>
+    /// <param name="boxCornerA">the first position of the box</param>
+    /// <param name="boxCornerB">the second position of the box</param>
+    /// <returns>true/false</returns>
+    /// </summary>
+    bool mouseDownIn(int key, COORD boxCornerA, COORD boxCornerB)
+    {
+        Box box;
+        box.to_box(boxCornerA, boxCornerB);
+        if (!box.is_valid())
+        {
+            return false;
+        }
+        if (mouseDown(key))
+        {
+            if (box.insideBox(getMousePosition()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+    /// <summary>
+    /// the same to mousedown, but this only return once until it releases.
+    /// </summary>
+    inline bool mousePress(int key)
+    {
+        return keyPress(key);
+    }
+    /// <summary>
+    /// the same to mousedownin, but this only return once until it releases.
+    /// </summary>
+    bool mousePressIn(int key, COORD boxCornerA, COORD boxCornerB)
+    {
+        Box box;
+        box.to_box(boxCornerA, boxCornerB);
+        if (!box.is_valid())
+        {
+            return false;
+        }
+        if (mousePress(key))
+        {
+            if (box.insideBox(getMousePosition()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     struct DAT
     {
         vector<string> image;
@@ -1453,6 +1597,86 @@ namespace hs
     {
         actorIMGs.push_back(target);
         return (int)actorIMGs.size();
+    }
+    /// <summary>
+    /// if mouse is down at a actor's hitbox...
+    /// </summary>
+    bool mouseDownAtActor(int key, int targID)
+    {
+        if (actorIMGs.size() < targID)
+        {
+            return false;
+        }
+        return mouseDownIn(key,
+            {
+                short
+                (
+                    actorIMGs[targID].position.X +
+                    actorIMGs[targID].anchor.X +
+                    actorIMGs[targID].data.hitbox[0].X
+                ),
+                short
+                (
+                    actorIMGs[targID].position.Y +
+                    actorIMGs[targID].anchor.Y +
+                    actorIMGs[targID].data.hitbox[0].Y
+                )
+            },
+            {
+                short
+                (
+                    actorIMGs[targID].position.X +
+                    actorIMGs[targID].anchor.X +
+                    actorIMGs[targID].data.hitbox[3].X
+                ),
+                short
+                (
+                    actorIMGs[targID].position.Y +
+                    actorIMGs[targID].anchor.Y +
+                    actorIMGs[targID].data.hitbox[3].Y
+                )
+            }
+        );
+    }
+    /// <summary>
+    /// the same to mousedownatactor, but only active once until it releases.
+    /// </summary>
+    bool mousePressAtActor(int key, int targID)
+    {
+        if (actorIMGs.size() < targID)
+        {
+            return false;
+        }
+        return mousePressIn(key,
+            {
+                short
+                (
+                    actorIMGs[targID].position.X +
+                    actorIMGs[targID].anchor.X +
+                    actorIMGs[targID].data.hitbox[0].X
+                ),
+                short
+                (
+                    actorIMGs[targID].position.Y +
+                    actorIMGs[targID].anchor.Y +
+                    actorIMGs[targID].data.hitbox[0].Y
+                )
+            },
+            {
+                short
+                (
+                    actorIMGs[targID].position.X +
+                    actorIMGs[targID].anchor.X +
+                    actorIMGs[targID].data.hitbox[3].X
+                ),
+                short
+                (
+                    actorIMGs[targID].position.Y +
+                    actorIMGs[targID].anchor.Y +
+                    actorIMGs[targID].data.hitbox[3].Y
+                )
+            }
+            );
     }
 }
 
