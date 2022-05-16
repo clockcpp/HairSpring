@@ -182,7 +182,7 @@ well i fixed this:)
 ☑ Lovely  
 ☑ It'll replace your life  
   
-### ---{ Game Time }--- // you can save the saves in the computer(with c++ file operations)  
+### ---{ Game Time }--- // you can save the saves in the computer(with c++ file standard operations)  
 ☑ Long enough for a cup of coffee  
 ☑ Short  
 ☑ Average  
