@@ -5,6 +5,14 @@ based on a part of escapement.
   
 we *probably* create a engine for it, once the lib has completed.  
   
+# updates:
+- inside repo: only tested the latest features by myself
+- DEV release: only tested by myself
+- ALPHA release: only created a game by myself
+- BETA release: QA tested.
+- PRE release: QA&Security tested.
+- release: everything is OK.
+  
 # flowchart(sketch):
 \*we are *about* to add support for game menus in the future
 ![flowchart](https://raw.githubusercontent.com/clockcpp/HairSpring/main/flowchart(sketch).png)
@@ -193,7 +201,7 @@ well i fixed this:)
 ☐ Never heard of  
 ☑ Minor bugs  
 ☐ Can get annoying  
-☐ ARK: Survival Evolved // btw when have ARK became a unit of bugs?   
+☐ ARK: Survival Evolved  
 ☐ The game itself is a big terrarium for bugs  
   
 ## functions list:  
