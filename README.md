@@ -20,21 +20,21 @@ we *probably* create a engine for it, once the lib has completed.
 ## How to use it
 you need to include the file then use following format to write the cpp
 
-main file:  
-__WARNING: THIS FILE IS OUTDATED AND REQUIRE UPDATING, PLEASE WAIT UNTIL THIS MESSAGE HAS BEEN REMOVED!__    
-you may see relese: v-1.0.0-example-balls as example.  
+main file:   
+if you want, you may download pre-relese: v-1.0.0-example-balls as example.  
 ```cpp
-// HairSpring.cpp : This file contains function "main". some of '.text' is here...
+// HairSpring.cpp : This file contains function "main". a part of '.text' is here...
 //
 
 #undef NDebug
 
-#include <iostream>
 #include "hairSpring.h"
 
 // runs like init, but it will be more tidier than put everything in a function.
 void config(int argc, char* argv[])
 {
+	// here comes the recommended config:
+	
 	cfg.consoleHwnd = hs::getConsoleHWND(); // set the HWND
 	cfg.windowName = "Example project"; // set the name of the window
 	// set the size of the console
@@ -44,42 +44,49 @@ void config(int argc, char* argv[])
 	cfg.consoleCHCP = HS_CHCP_UNICODE;
 	
 	// game base settings
-	cfg.gameTPS = 128;
-	cfg.gameMaxFPS = 155;
+	cfg.gameTPS = 20;
+	cfg.gameMaxFPS = 60;
 
 	cfg.enable_watchdog = true; // enable watchdog to prevent the game crash but doesn't exit
 	cfg.watchdog_timer = 20000; // ms
+
+	// lock the framerate to optimize the CPU use
+	// only try this when you gonna release the game.
+	// cfg.max_sleep_time_client = 50 / cfg.gameMaxFPS;
+	// cfg.max_sleep_time_server = 10 / cfg.gameTPS;
+	cfg.max_sleep_time_main = 1000;
+	cfg.max_sleep_time_watchdog = 1000;
 
 	// debug settings
 	// Turn this off when you gonna release the game, or you may wanna leave it for players.
 	// Debugging __significantly__ slows down the game
 	//					(e.g. 128TPS->100TPS, 144FPS->128FPS, etc.)
-	cfg.debug = true; 
+	cfg.debug = true;
 	cfg.debugKey = KEY_F3;
+	cfg.debugHitBox = KEY_F4;
+	cfg.debugCursor = false;
+
+	// remove quick edit mode to prevent client proc being killed by watchdog
+	// if the user click their mouse on the screen and break the program as "select and copy"
+	cfg.noQuickEditMode = true;
 }
 
 // only run once
-void init(int argc, char *argv[])
+void init(int argc, char* argv[])
 {
 	// code here...
+	return;
 }
 
-// IF you do decide only use one of following function for BOTH calculation and rendering, 
-// you may COMPLETELY MESS the game up
+// IF you do decide only use one of following function for both calculation and rendering, 
+// you may COMPLETELY mess the game up
 
 // this function run in another thread, and loop until it exit(in this
 // case we use esc to exit)
 // you'd better use this function for rendering something, not calculating.
 void loopClient(int argc, char *argv[])
 {
-	if (hs::keyDown(KEY_ESC))
-	{
-		handler.stopGame = true;
-	}
 	// code here...
-	
-
-
 	return;
 }
 
@@ -89,7 +96,6 @@ void loopClient(int argc, char *argv[])
 void loopServer(int argc, char* argv[])
 {
 	// code here...
-	
 	return;
 }
 
@@ -112,9 +118,6 @@ or you may use following code to omit the "hs::"
 using namespace hs;
 ```
 but be carefully when you use this, it may cause lots of functions with the same name in the source code
-
-btw i found a spelling mistake at ln 19 and im gonna corret it later.  
-well i fixed this:)  
 
 ## For fun:
 ### ---{ Graphics }---  
