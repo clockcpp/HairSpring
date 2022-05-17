@@ -4,7 +4,19 @@ namespace hs
     {
         HWND hwnd;
         hwnd = FindWindow(L"ConsoleWindowClass", NULL);
-        return hwnd;
+        if (hwnd)
+        {
+            return hwnd;
+        }
+        else
+        {
+            mav("Failed to get window handle.");
+        }
+    }
+    inline bool isFocus(HWND thisWindow)
+    {
+        // TODO: judge whether this window has the focus
+        return true;
     }
     // msgboxes
     void msgbox(HWND hwnd, LPCSTR text, LPCSTR capt)
@@ -69,7 +81,7 @@ namespace hs
     /// <returns>if the key is down then return true</returns>
     inline bool keyDown(int KeyCode)
     {
-        return KEY_DOWN(KeyCode);
+        return (KEY_DOWN(KeyCode) && isFocus(cfg.consoleHwnd));
     }
     inline bool keyPress(int KeyCode)
     {
