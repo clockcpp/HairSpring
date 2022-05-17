@@ -1,5 +1,5 @@
 # INDEV: This library is not completely completed and we are making more features for it.
-__Development Progress: [+++|--------]30%__  
+__Development Progress: [+++|--------]32%__  
   
 # HairSpring
 A 2D library for cpp console games,  
@@ -24,13 +24,19 @@ you need to include the file then use following format to write the cpp
 
 main file:   
 if you want, you may download pre-relese: v-1.0.0-example-balls as example.  
+  
+download the source code, then put them in a folder called hs, then include the lib like this:  
+```cpp
+#include "hs/hairSpring.h"
+```
+  
 ```cpp
 // HairSpring.cpp : This file contains function "main". a part of '.text' is here...
 //
 
 #undef NDebug
 
-#include "hairSpring.h"
+#include "hs/hairSpring.h"
 
 // runs like init, but it will be more tidier than put everything in a function.
 void config(int argc, char* argv[])
@@ -104,7 +110,7 @@ void loopServer(int argc, char* argv[])
 }
 
 // only run once when the program is about to exit.
-int exit(int argc, char *argv[])
+int quit(int argc, char *argv[])
 {
 	// code here...
 	
