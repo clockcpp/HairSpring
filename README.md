@@ -21,14 +21,13 @@ we *probably* create a engine for it, once the lib has completed.
 
 ## How to use it
 you need to include the file then use following format to write the cpp
-
-main file:   
-if you want, you may download pre-relese: v-1.0.0-example-balls as example.  
-  
 download the source code, then put them in a folder called hs, then include the lib like this:  
 ```cpp
 #include "hs/hairSpring.h"
 ```
+  
+  
+main file:   
   
 ```cpp
 // HairSpring.cpp : This file contains function "main". a part of '.text' is here...
