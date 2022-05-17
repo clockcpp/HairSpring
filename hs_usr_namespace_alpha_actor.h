@@ -183,6 +183,7 @@ namespace hs
             fin.open(this->imageFilePath);
             if (fin.fail())
             {
+                mav("Failed to load actor file: \"" + this->imageFilePath + "\"!");
                 return ans;
             }
             char buffer[HS_MAXN] = "";
