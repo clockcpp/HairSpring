@@ -214,3 +214,5 @@ using namespace std;
 
 #define MOUSEs true
 #endif
+
+bool _HS_MOUSE_ERR_FONT_WARNED_ = false;

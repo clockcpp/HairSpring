@@ -66,6 +66,8 @@ struct gmConfig
     /// don't hide cursor
     /// </summary>
     bool debugCursor = true;
+
+    bool strictMode = false;
 } cfg;
 struct gamePause
 {

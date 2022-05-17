@@ -32,7 +32,15 @@ namespace hs
             ans.X -= ans_x_cpy;
             break;
         default:
-            HS_BLUECONSOLE__(-2);
+            if (cfg.strictMode)
+            {
+                HS_BLUECONSOLE__(-2);
+            }
+            else if(!_HS_MOUSE_ERR_FONT_WARNED_)
+            {
+                _HS_MOUSE_ERR_FONT_WARNED_ = true;
+                hs::Wrngbox(cfg.consoleHwnd, "Your font doesn't supported by HairSpring.\nTry to fix this with the instructions on the froum.\nThe program MAY NOT work well before the problem has been solved.", cfg.windowName.c_str());
+            }
             break;
         }
 
