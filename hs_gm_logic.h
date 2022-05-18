@@ -125,6 +125,10 @@ void watchdog()
     while (!handler.stopGame)
     {
         Sleep(cfg.max_sleep_time_watchdog);
+        if (handler.pause.pauseWatchDog)
+        {
+            continue;
+        }
         if (handler.pause.pauseClient)
         {
             lastHBClt = clock();

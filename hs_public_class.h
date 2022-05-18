@@ -45,7 +45,7 @@ struct gmConfig
     /// timer: when a process has lagged for such millisecond, the task will be killed.
     /// dosen't work well when the value has been set lower than 2000 ms(2 seconds)
     /// </summary>
-    long watchdog_timer = 20000;
+    long watchdog_timer = 5000;
 
     bool noQuickEditMode = true;
 
@@ -73,9 +73,10 @@ struct gamePause
 {
     bool pauseServer;
     bool pauseClient;
+    bool pauseWatchDog;
 };
 struct hd
 {
-    gamePause pause = {false, false};
+    gamePause pause = {false, false, false};
     bool stopGame = false;
 } handler;

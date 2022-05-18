@@ -34,3 +34,22 @@ void HS_BLUECONSOLE__(int errorCode)
     cmd("pause >nul");
     exit(errorCode);
 }
+
+void HS_ERROR_HANDLER_UNSTRICT__(string ERROR_CODE)
+{
+    handler.pause.pauseWatchDog = true;
+    hs::Wrngbox(cfg.consoleHwnd, 
+        (
+            string(
+        "An error just occurred, but the program can still work.\n\
+        Try to fix this with the instructions on the forum with following error code,\n\
+        or the program may NOT work well before the problem has been solved.\n\n\n\
+        ERROR-CODE: "
+            ) + 
+            ERROR_CODE
+        ).c_str(), 
+        (string("ERROR - " + cfg.windowName)).c_str()
+    );
+    handler.pause.pauseWatchDog = false;
+    return;
+}

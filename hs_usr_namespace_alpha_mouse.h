@@ -1,3 +1,5 @@
+void HS_ERROR_HANDLER_UNSTRICT__(string);
+
 namespace hs
 {
     /// <summary>
@@ -39,7 +41,7 @@ namespace hs
             else if(!_HS_MOUSE_ERR_FONT_WARNED_)
             {
                 _HS_MOUSE_ERR_FONT_WARNED_ = true;
-                hs::Wrngbox(cfg.consoleHwnd, "Your font doesn't supported by HairSpring.\nTry to fix this with the instructions on the froum.\nThe program MAY NOT work well before the problem has been solved.", cfg.windowName.c_str());
+                HS_ERROR_HANDLER_UNSTRICT__("[HS_MOUSE_POSITION_FONT_ERROR]");
             }
             break;
         }
