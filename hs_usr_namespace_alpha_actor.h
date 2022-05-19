@@ -22,6 +22,7 @@ namespace hs
     class actor
     {
     public:
+        bool isLogicActor = false;
         COORD position = { 0,0 };
         COORD lastPosition = { 0,0 };
         COORD anchor = { 0,0 };

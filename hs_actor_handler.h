@@ -1,3 +1,8 @@
+namespace hs
+{
+    int registerActorIMG(actorIMG);
+}
+
 
 class HS_actorsHandler
 {
@@ -54,26 +59,35 @@ public:
     }
     bool threadedUpWith(int thisID, int targID)
     {
+        // skip self
         if (thisID == targID)
         {
             return false;
         }
+        // out of range
         if (actorIMGs.size() < thisID || actorIMGs.size() < targID)
         {
             return false;
         }
+        // noclip
         if (actorIMGs[thisID].attr.NoClip || actorIMGs[targID].attr.NoClip)
         {
             return false;
         }
+        // skip same position (unless logic actors)
         if (actorIMGs[thisID].position.X == actorIMGs[targID].position.X &&
-            actorIMGs[thisID].position.Y == actorIMGs[targID].position.Y)
+            actorIMGs[thisID].position.Y == actorIMGs[targID].position.Y &&
+            !actorIMGs[thisID].isLogicActor &&
+            !actorIMGs[targID].isLogicActor
+            )
         {
             return true;
         }
 
+        // start testing
         bool flag = false;
 
+        // create the box
         register COORD thisbox[4] =
         {
             actorIMGs[thisID].data.hitbox[0],
@@ -89,6 +103,7 @@ public:
             actorIMGs[targID].data.hitbox[3]
         };
 
+        // add the position and anchor
         for (int i = 0; i < 4; ++i)
         {
             thisbox[i].X += actorIMGs[thisID].position.X;
@@ -102,6 +117,7 @@ public:
             targbox[i].Y += actorIMGs[targID].anchor.Y;
         }
 
+        // check those box
         for (int i = 0; i < 4; ++i)
         {
             flag |= (
@@ -120,8 +136,22 @@ public:
         }
         return flag;
     }
-    bool threadedUp(int thisID)
+    bool threadedUp(int thisID, int* optionalIgnoreIDs = NULL)
     {
+        // skip ignored actor.
+        if (optionalIgnoreIDs != NULL)
+        {
+            // check every element of the ignored ids.
+            for (int i = 0; i < sizeof(*optionalIgnoreIDs) / sizeof(int); ++i)
+            {
+                if (thisID == optionalIgnoreIDs[i])
+                {
+                    return false;
+                }
+            }
+        }
+
+        // start checking
         bool flag = false;
         for (int i = 0; i < actorIMGs.size(); ++i)
         {
@@ -129,7 +159,66 @@ public:
             {
                 continue;
             }
-            if (this->threadedUpWith(thisID, i))
+            if (threadedUpWith(thisID, i))
+            {
+                flag = true;
+                break;
+            }
+        }
+        return flag;
+    }
+    bool adjacentWith(int thisID, int targID)
+    {
+        bool ans = false;
+        hs::actorIMG tmp;
+        tmp = actorIMGs[thisID];
+        
+        // expand hitbox
+        tmp.data.hitbox[0].X -= 1;
+        tmp.data.hitbox[0].Y -= 1;
+        tmp.data.hitbox[1].X += 1;
+        tmp.data.hitbox[1].Y -= 1;
+        tmp.data.hitbox[2].X -= 1;
+        tmp.data.hitbox[2].Y += 1;
+        tmp.data.hitbox[3].X += 1;
+        tmp.data.hitbox[3].Y += 1;
+
+        // start testing
+        // register tmp actor
+        int id = hs::registerActorIMG(tmp);
+
+        // test
+        ans = threadedUpWith(id, targID);
+
+        // free tmp actor
+        actorHandler.removeByID(id);
+
+        return ans;
+    }
+    bool adjacent(int thisID, int* optionalIgnoreIDs = NULL)
+    {
+        // skip ignored actor.
+        if (optionalIgnoreIDs != NULL)
+        {
+            // check every element of the ignored ids.
+            for (int i = 0; i < sizeof(*optionalIgnoreIDs) / sizeof(int); ++i)
+            {
+                if (thisID == optionalIgnoreIDs[i])
+                {
+                    return false;
+                }
+            }
+        }
+
+        // start checking
+        bool flag = false;
+        for (int i = 0; i < actorIMGs.size(); ++i)
+        {
+            if (thisID == i)
+            {
+                continue;
+            }
+            if (adjacentWith(thisID, i))
             {
                 flag = true;
                 break;
