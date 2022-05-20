@@ -226,4 +226,84 @@ public:
         }
         return flag;
     }
+    /// <summary>
+    /// get the state of adjacent
+    /// </summary>
+    /// <param name="thisID"></param>
+    /// <param name="targID"></param>
+    /// <returns>ans+=: 0: nil; 1: A; 10: B, 100: C, 1000: D</returns>
+    int getAdjacentState(int thisID, int targID)
+    {
+        if (!actorHandler.adjacentWith(thisID, targID))
+        {
+            return 0;
+        }
+
+        int ans = 0;
+        const short binMap[4] = { 1,2,4,8 };
+
+        // X: self
+        // #: target
+
+        // #X
+        if (actorIMGs[thisID].position.X + 
+            actorIMGs[thisID].anchor.X + 
+            actorIMGs[thisID].data.hitbox[0].X-1 
+            ==
+            actorIMGs[targID].position.X + 
+            actorIMGs[targID].anchor.X + 
+            actorIMGs[targID].data.hitbox[3].X
+        )
+        {
+            ans |= binMap[0];
+        }
+
+        // X
+        // #
+
+        if (
+            actorIMGs[thisID].position.Y + 
+            actorIMGs[thisID].anchor.Y + 
+            actorIMGs[thisID].data.hitbox[3].Y+1
+            ==
+            actorIMGs[targID].position.Y + 
+            actorIMGs[targID].anchor.Y + 
+            actorIMGs[targID].data.hitbox[0].Y
+        )
+        {
+            ans |= binMap[1];
+        }
+
+        // X#
+        if (
+            actorIMGs[thisID].position.X +
+            actorIMGs[thisID].anchor.X +
+            actorIMGs[thisID].data.hitbox[3].X+1
+            ==
+            actorIMGs[targID].position.X +
+            actorIMGs[targID].anchor.X +
+            actorIMGs[targID].data.hitbox[0].X
+        )
+        {
+            ans |= binMap[2];
+        }
+
+        // #
+        // X
+        if (
+            actorIMGs[thisID].position.Y +
+            actorIMGs[thisID].anchor.Y +
+            actorIMGs[thisID].data.hitbox[0].Y-1
+            ==
+            actorIMGs[targID].position.Y +
+            actorIMGs[targID].anchor.Y +
+            actorIMGs[targID].data.hitbox[3].Y
+        )
+        {
+            ans |= binMap[3];
+        }
+
+        // prevent corners
+        return ans;
+    }
 } actorHandler;
