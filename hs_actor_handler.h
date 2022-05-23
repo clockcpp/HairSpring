@@ -41,6 +41,10 @@ public:
     {
         for (int i = 0; i < actorIMGs.size(); ++i)
         {
+            if (actorIMGs[i].isLogicActor)
+            {
+                continue;
+            }
             actorIMGs[i].draw(actorIMGs[i].position);
         }
         return;
@@ -52,6 +56,10 @@ public:
     {
         for (int i = 0; i < actorIMGs.size(); ++i)
         {
+            if (actorIMGs[i].isLogicActor)
+            {
+                continue;
+            }
             actorIMGs[i].remove(actorIMGs[i].lastPosition);
             actorIMGs[i].draw(actorIMGs[i].position);
         }
@@ -132,7 +140,10 @@ public:
                 targbox[3].X >= thisbox[i].X &&
                 targbox[3].Y >= thisbox[i].Y
                 );
-
+            if (flag)
+            {
+                break;
+            }
         }
         return flag;
     }
@@ -185,6 +196,7 @@ public:
 
         // start testing
         // register tmp actor
+        tmp.isLogicActor = true;
         int id = hs::registerActorIMG(tmp);
 
         // test

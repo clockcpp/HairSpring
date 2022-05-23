@@ -7,7 +7,7 @@ namespace hs
     inline int registerActorIMG(actorIMG target)
     {
         actorIMGs.push_back(target);
-        return (int)actorIMGs.size()-1;
+        return (int)actorIMGs.size() - 1;
     }
 }
 
