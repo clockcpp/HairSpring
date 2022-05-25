@@ -215,4 +215,8 @@ using namespace std;
 #define MOUSEs true
 #endif
 
+#ifndef HS_MAX_ACTOR_COUNT
+#define HS_MAX_ACTOR_COUNT 256
+#endif
+
 bool _HS_MOUSE_ERR_FONT_WARNED_ = false;

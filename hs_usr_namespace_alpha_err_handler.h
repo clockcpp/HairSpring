@@ -1,6 +1,6 @@
 namespace hs
 {
-    inline void mav(string reason)
+    inline void mav(string reason = "")
     {
         if (reason.empty())
         {

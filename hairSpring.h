@@ -9,6 +9,7 @@ void HS_BLUECONSOLE__(int);
 #include "hs_usr_namespace_alpha.h"
 
 vector<hs::actorIMG> actorIMGs;
+map<string, int> actorIDs;
 #include "hs_actor_handler.h"
 #include "hs_usr_namespace_beta.h"
 #include "hs_prop.h"

@@ -79,12 +79,11 @@ void Client(int argc, char** argv)
                 {
                     legCoord = hs::getCursorPos();
                     coord = hs::getConsoleSize();
-                    hs::gotoxy(coord.X - 10, 0);
-                    printf("          ");
-                    hs::gotoxy(coord.X - 10, 1);
-                    printf("          ");
-                    hs::gotoxy(coord.X - 10, 2);
-                    printf("          ");
+                    for (int i = 0; i < 3; ++i)
+                    {
+                        hs::gotoxy(coord.X - 10, i);
+                        printf("          ");
+                    }
                     hs::gotoxy(legCoord.X, legCoord.Y);
                 }
             }

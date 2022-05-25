@@ -1,8 +1,8 @@
 namespace hs
 {
-    int registerActorIMG(actorIMG);
+    int registerActorIMGByID(actorIMG target);
+    int getActor(string);
 }
-
 
 class HS_actorsHandler
 {
@@ -20,6 +20,29 @@ public:
         actorIMGs.erase(actorIMGs.begin() + ID);
         return;
     }
+    void removeByName(string name)
+    {
+        int ID = hs::getActor(name);
+        actorIMGs.erase(actorIMGs.begin() + ID);
+        map<string, int>::iterator iter = actorIDs.begin();
+        for (; iter != actorIDs.end(); ++iter)
+        {
+            if (iter->second == ID)
+            {
+                actorIDs.erase(iter);
+                break;
+            }
+        }
+
+        for (iter = actorIDs.begin();iter != actorIDs.end();++iter)
+        {
+            if (iter->second > ID)
+            {
+                --iter->second;
+            }
+        }
+        return;
+    }
     /// <summary>
     /// clear the actors,
     /// all ids will be unavailable
@@ -27,6 +50,7 @@ public:
     void removeAll()
     {
         actorIMGs.clear();
+        actorIDs.clear();
         return;
     }
     void eraseAll()
@@ -201,7 +225,7 @@ public:
         // start testing
         // register tmp actor
         tmp.isLogicActor = true;
-        int id = hs::registerActorIMG(tmp);
+        int id = hs::registerActorIMGByID(tmp);
 
         // test
         ans = threadedUpWith(id, targID);
