@@ -16,8 +16,8 @@ we *probably* create a engine for it, once the lib has completed.
 - release: everything is OK.
   
 # flowchart(sketch):
-\*we are *about* to add support for game menus in the future
-**this flowchart may be out of date.**
+\*we are *about* to add support for game menus in the future  
+__**this flowchart may be out of date.**__
 ![flowchart](https://raw.githubusercontent.com/clockcpp/HairSpring/main/flowchart(sketch).png)
 
 ## How to use it
