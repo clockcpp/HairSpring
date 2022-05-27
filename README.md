@@ -1,5 +1,6 @@
 # INDEV: This library is not completely completed and we are making more features for it.
 __Development Progress: [++++|-------]37%__  
+Currently we met some *technical* problem and we are still woring hard for this.  
   
 # HairSpring
 A 2D library for cpp console games,  
