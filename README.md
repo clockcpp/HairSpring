@@ -28,13 +28,12 @@ download the source code, then put them in a folder called hs, then include the 
 ```cpp
 #include "hs/hairSpring.h"
 ```
-__If you want create the project by yourself, then DO__  
-__Remember to set the project to ANSI mode, and add "winmm.lib" to linker, or the sound engine can not work well(cannot compile).__
+__If you want create the project by yourself, then DO Remember to set the project to ANSI mode, and add "winmm.lib" to linker, or the sound engine can not work__ well(cannot compile).__
   
 main file:   
   
 ```
-use std::<function-name> to use the lib
+use hs::<function-name> to use the lib
 ```
 or you may use following code to omit the "hs::"
 ```cpp
