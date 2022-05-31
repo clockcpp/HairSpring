@@ -1,6 +1,8 @@
 # INDEV: This library is not completely completed and we are making more features for it.
-__Development Progress: [++++|-------]37%__  
-Currently we met some *technical* problem and we are still woring hard for this.  
+__Development Progress: [++++|-------]45%__  
+
+## Remember set the project to ANSI mode, and add "winmm.lib" to linker
+## or the sound engine can not work well(cannot compile).
   
 # HairSpring
 A 2D library for cpp console games,  
