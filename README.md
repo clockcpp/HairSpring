@@ -10,10 +10,13 @@ based on a part of escapement.
 we *probably* create a engine for it, once the lib has completed.  
   
 ## development system requirement:
-- Microsoft Windows Windows 10+, x64(I didn't test other systems, you may try it yourself, but I probably won't fix bugs on lower version of windows)(It does not work on linux or macos).
+- OS: Microsoft Windows Windows 10+, x64(I didn't test other systems, you may try it yourself, but I probably won't fix bugs on lower version of windows)(It does not work on linux or macos).
 - Disk Space: At least 256MB of free disk space.
 - Memory: 4GB RAM minimum, 8GB+ recommended.
 - Processer: Intel Core i3 and higher, or the same performances AMD CPUs
+  
+## devlopment software requirement:
+- IDE: Microsoft Visual Studio 2022 with C++ desktop development selected [Download Visual Studio here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
   
 ## How to use it
 You need to include the file then use following format to write the cpp  
