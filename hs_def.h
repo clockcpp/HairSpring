@@ -18,6 +18,8 @@
 
 using namespace std;
 
+#define lpcstr(val) (LPCSTR((string(val)).c_str()))
+
 #define __VERSION_OF_HAIRSPRING__ "1.0.0"
 #define __RELEASE_VERSION_OF_HAIRSPRING__ 1
 #define __DEBUG_VERSION_OF_HAIRSPRING__ 0

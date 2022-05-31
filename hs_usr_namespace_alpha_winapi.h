@@ -3,7 +3,7 @@ namespace hs
     HWND getConsoleHWND()
     {
         HWND hwnd;
-        hwnd = FindWindow(L"ConsoleWindowClass", NULL);
+        hwnd = FindWindow("ConsoleWindowClass", NULL);
         if (hwnd)
         {
             return hwnd;
