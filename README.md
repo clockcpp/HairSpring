@@ -18,6 +18,9 @@ we *probably* create a engine for it, once the lib has completed.
 ## devlopment software requirement:
 - IDE: Microsoft Visual Studio 2022 with C++ desktop development selected; [Download Visual Studio here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
   
+## developer requirement:
+- C++
+  
 ## How to use it
 You need to include the file then use following format to write the cpp  
 You can directly download the SDKs in 'releases' to start coding at once, or you may  
