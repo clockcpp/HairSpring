@@ -1,7 +1,7 @@
 # INDEV: This library is not completely completed and we are making more features for it.
 __Development Progress: [++++|-------]45%__  
 
-## Remember set the project to ANSI mode, and add "winmm.lib" to linker, or the sound engine can not work well(cannot compile).
+## Remember to set the project to ANSI mode, and add "winmm.lib" to linker, or the sound engine can not work well(cannot compile).
   
 # HairSpring
 A 2D library for cpp console games,  
@@ -9,6 +9,33 @@ based on a part of escapement.
   
 we *probably* create a engine for it, once the lib has completed.  
   
+## development system requirement:
+- Microsoft Windows Windows 10+, x64(I didn't test other systems, you may try it yourself, but I probably won't fix bugs on lower version of windows)(It does not work on linux or macos).
+- Disk Space: At least 256MB of free disk space.
+- Memory: 4GB RAM minimum, 8GB+ recommended.
+- Processer: Intel Core i3 and higher, or the same performances AMD CPUs
+  
+## How to use it
+You need to include the file then use following format to write the cpp  
+You can directly download the SDKs in 'releases' to start coding at once, or you may  
+download the source code, then put them in a folder called hs, then include the lib like this:  
+```cpp
+#include "hs/hairSpring.h"
+```
+__If you want create the project by yourself, then DO__  
+__Remember to set the project to ANSI mode, and add "winmm.lib" to linker, or the sound engine can not work well(cannot compile).__
+  
+main file:   
+  
+```
+use std::<function-name> to use the lib
+```
+or you may use following code to omit the "hs::"
+```cpp
+using namespace hs;
+```
+but be carefully when you use this, it may cause lots of functions with the same name in the source code
+
 # When a update has been pushed, what does it means?
 - inside repo: only tested the latest features by myself
 - DEV release: only tested by myself
@@ -21,115 +48,6 @@ we *probably* create a engine for it, once the lib has completed.
 \*we are *about* to add support for game menus in the future  
 __**this flowchart may be out of date.**__
 ![flowchart](https://raw.githubusercontent.com/clockcpp/HairSpring/main/flowchart(sketch).png)
-
-## How to use it
-you need to include the file then use following format to write the cpp
-download the source code, then put them in a folder called hs, then include the lib like this:  
-```cpp
-#include "hs/hairSpring.h"
-```
-  
-  
-main file:   
-  
-```cpp
-// HairSpring.cpp : This file contains function "main". a part of '.text' is here...
-//
-
-#undef NDebug
-
-#include "hs/hairSpring.h"
-
-// runs like init, but it will be more tidier than put everything in a function.
-void config(int argc, char* argv[])
-{
-	// here comes the recommended config:
-	
-	cfg.consoleHwnd = hs::getConsoleHWND(); // set the HWND
-	cfg.windowName = "Example project"; // set the name of the window
-	// set the size of the console
-	cfg.consoleSizeX = 160;
-	cfg.consoleSizeY = 45;
-	// set the encoding of the console
-	cfg.consoleCHCP = HS_CHCP_UNICODE;
-	
-	// game base settings
-	cfg.gameTPS = 20;
-	cfg.gameMaxFPS = 60;
-
-	cfg.enable_watchdog = true; // enable watchdog to prevent the game crash but doesn't exit
-	cfg.watchdog_timer = 20000; // ms
-
-	// lock the framerate to optimize the CPU use
-	// only try this when you gonna release the game.
-	// cfg.max_sleep_time_client = 50 / cfg.gameMaxFPS;
-	// cfg.max_sleep_time_server = 10 / cfg.gameTPS;
-	cfg.max_sleep_time_main = 1000;
-	cfg.max_sleep_time_watchdog = 1000;
-
-	// debug settings
-	// Turn this off when you gonna release the game, or you may wanna leave it for players.
-	// Debugging __significantly__ slows down the game
-	//					(e.g. 128TPS->100TPS, 144FPS->128FPS, etc.)
-	cfg.debug = true;
-	cfg.debugKey = KEY_F3;
-	cfg.debugHitBox = KEY_F4;
-	cfg.debugCursor = false;
-
-	// remove quick edit mode to prevent client proc being killed by watchdog
-	// if the user click their mouse on the screen and break the program as "select and copy"
-	cfg.noQuickEditMode = true;
-}
-
-// only run once
-void init(int argc, char* argv[])
-{
-	// code here...
-	return;
-}
-
-// IF you do decide only use one of following function for both calculation and rendering, 
-// you may COMPLETELY mess the game up
-// put some calculations in server, it will be easier for you to pause the game by
-// setting handler.pause.pauseServer to true.
-
-// this function run in another thread, and loop until it exit(in this
-// case we use esc to exit)
-// you'd better use this function for rendering something, not calculating.
-void loopClient(int argc, char *argv[])
-{
-	// code here...
-	return;
-}
-
-// this function run in another thread, and loop until it exit
-// for singleplayer, we only need call exit at client side.
-// you'd better use this function for calculating something, not rendering.
-void loopServer(int argc, char* argv[])
-{
-	// code here...
-	return;
-}
-
-// only run once when the program is about to exit.
-int quit(int argc, char *argv[])
-{
-	// code here...
-	
-	// this controls the return value
-	return 0;
-}
-
-// Run prog	: Ctrl + F5 or debug > "start executing(without debugging)"
-// Debug	: F5        or debug > "start debugging"
-
-
-```
-or you may use following code to omit the "hs::"
-```cpp
-using namespace hs;
-```
-but be carefully when you use this, it may cause lots of functions with the same name in the source code
 
 ## For fun:
 ### ---{ Graphics }---  
