@@ -50,7 +50,7 @@ but be carefully when you use this, it may cause lots of functions with the same
 - release: everything is OK.
   
 # flowchart(sketch):
-\*we are *about* to add support for game menus in the future  
+we are \**about*\* to add support for game menus in the future  
 __**this flowchart may be out of date.**__
 ![flowchart](https://raw.githubusercontent.com/clockcpp/HairSpring/main/flowchart(sketch).png)
 
