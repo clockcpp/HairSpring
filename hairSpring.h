@@ -114,20 +114,28 @@ map<string, int> actorIDs;
  *		class HS_actorsHandler
  *		{
  *			hs::actorIMG getActorByID(int ID);
- *			int getCountTotal()
- *			void removeByID(int ID)
- *			void removeByName(string name)
- *			int getCountTotal()
- *			void removeByID(int ID)
- *			void removeByName(string name)
- *			void removeAll()
- *			bool threadedUpWith(int thisID, int targID)
- *			bool threadedUp(int thisID, int* optionalIgnoreIDs = NULL)
- *			bool adjacentWith(int thisID, int targID)
- *			bool adjacent(int thisID, int* optionalIgnoreIDs = NULL)
- *			int getAdjacentState(int thisID, int targID)
- *			int getAdjacentStateNoRepeat(int thisID, int targID)
+ *			int getCountTotal();
+ *			void removeByID(int ID);
+ *			void removeByName(string name);
+ *			int getCountTotal();
+ *			void removeByID(int ID);
+ *			void removeByName(string name);
+ *			void removeAll();
+ *			bool threadedUpWith(int thisID, int targID);
+ *			bool threadedUp(int thisID, int* optionalIgnoreIDs = NULL);
+ *			bool adjacentWith(int thisID, int targID);
+ *			bool adjacent(int thisID, int* optionalIgnoreIDs = NULL);
+ *			int getAdjacentState(int thisID, int targID);
+ *			int getAdjacentStateNoRepeat(int thisID, int targID);
  *		} actorHandler;
+ *	in namespace hs:
+ *		class trigger
+ *		{
+ *			bool triggered = false;
+ *			bool set(COORD xy, COORD x1y1);
+ *			bool check(int targID);
+ *			hs::Box index;
+ *		};
  * 
 **/
 #include "hs_actor_handler.h"

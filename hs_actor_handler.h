@@ -431,3 +431,70 @@ public:
         return 0;
     }
 } actorHandler;
+
+namespace hs
+{
+    /// <summary>
+    /// a class used to detecting actors
+    /// </summary>
+    class trigger
+    {
+    public:
+        bool triggered = false;
+        /// <summary>
+        /// set two coord.s to current trigger
+        /// </summary>
+        /// <param name="xy">x[0]y[0]</param>
+        /// <param name="x[1]y[1]"></param>
+        /// <param name="targ">the detecting target</param>
+        /// <returns>if success then return false</returns>
+        bool set(COORD xy, COORD x1y1)
+        {
+            this->index.to_box(xy, x1y1);
+            return !this->index.is_valid();
+        }
+        bool check(int targID)
+        {
+            // prevent wrong data
+            if (!this->index.is_valid())
+            {
+                // return this is not on trigger
+                return 0;
+            }
+
+            // init actor tmp for detecting
+            hs::actorIMG tmp;
+
+            // result will save here...
+            bool ans = false;
+
+            // set the hitbox
+
+            tmp.data.hitbox[0].X = this->index.x0y0.X;
+            tmp.data.hitbox[0].Y = this->index.x0y0.Y;
+            tmp.data.hitbox[1].X = this->index.x1y0.X;
+            tmp.data.hitbox[1].Y = this->index.x1y0.Y;
+            tmp.data.hitbox[2].X = this->index.x0y1.X;
+            tmp.data.hitbox[2].Y = this->index.x0y1.Y;
+            tmp.data.hitbox[3].X = this->index.x1y1.X;
+            tmp.data.hitbox[3].Y = this->index.x1y1.Y;
+
+            // start testing
+            // register tmp actor
+            tmp.isLogicActor = true;
+            int id = hs::registerActorIMGByID(tmp);
+
+            // test
+            ans = actorHandler.threadedUpWith(id, targID);
+
+            // free tmp actor
+            actorHandler.removeByID(id);
+
+            // return the result
+            this->triggered = ans == true ? true : this->triggered;
+            return ans;
+        }
+    private:
+        hs::Box index;
+    };
+};
