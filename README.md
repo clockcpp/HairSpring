@@ -1,5 +1,5 @@
 # INDEV: This library is not completely completed and we are making more features for it.
-__Development Progress: [++++|-------]45%__  
+__Development Progress: [+++++|-----]50%__  
 
 ## Remember to set the project to ANSI mode, and add "winmm.lib" to linker, or the sound engine can not work well(cannot compile).
   
