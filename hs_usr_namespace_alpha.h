@@ -7,4 +7,3 @@
 #include "hs_usr_namespace_alpha_winapi2.h"
 #include "hs_usr_namespace_alpha_mouse.h"
 #include "hs_usr_namespace_alpha_actor.h"
-#include "hs_usr_namespace_alpha_triggers.h"
