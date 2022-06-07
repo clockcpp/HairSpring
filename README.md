@@ -16,9 +16,10 @@ we *probably* create a engine for it, once the lib has completed.
 - Processer: Intel Core i3 and higher, or the same performances AMD CPUs.
   
 ## devlopment software requirement:
-- IDE: Microsoft Visual Studio 2022 with C++ desktop development selected; [Download Visual Studio here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)  __NOT Visual Studio Code__
+- IDE: Microsoft Visual Studio 2022 with C++ desktop development selected; [Download Visual Studio here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)    
+__NOT Visual Studio Code__
   
-## developer requirement:
+## development language:
 - C++
   
 ## How to use it
@@ -28,7 +29,7 @@ download the source code, then put them in a folder called hs, then include the 
 ```cpp
 #include "hs/hairSpring.h"
 ```
-__If you want create the project by yourself, then DO Remember to set the project to ANSI mode, and add "winmm.lib" to linker, or the sound engine can not work__ well(cannot compile).__
+__If you want create the project by yourself, then DO Remember to set the project to ANSI mode(in Microsoft Visual Studio project settings), or the sound engine can not work well(cannot compile).__
   
 main file:   
   
