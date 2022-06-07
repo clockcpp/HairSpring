@@ -1,5 +1,19 @@
+/**
+ *
+ * !--			FILENAME: "hs_def.h"				--
+ * !--			ORGANIZATION: 2022(c) ExL Studios	--
+ * !--			PROGRAMMER:	Executif				--
+ *
+ * Summary: The definitions of project HairSpring
+ *
+ * Type: Open-source
+ * License: GPL3
+ *
+**/
+
 #pragma once
 
+// include winmm.lib for MciSendString(playsnd)
 #pragma comment(lib,"winmm.lib")
 
 #include <iostream>
@@ -20,22 +34,34 @@
 
 using namespace std;
 
+// casting a string to LPCSTR
 #define lpcstr(val) (LPCSTR((string(val)).c_str()))
 
+// versions
 #define __VERSION_OF_HAIRSPRING__ "1.0.0"
 #define __RELEASE_VERSION_OF_HAIRSPRING__ 1
 #define __DEBUG_VERSION_OF_HAIRSPRING__ 0
 #define __COMPILE_VERSION_OF_HAIRSPRING__ 0
 
+// HairSpring limits
 #define HS_MAXN 1000
 
+// defitions of ESCAPEMENT
 #ifndef ___EscDef___
+// cmd() : run sth. in console
 #define cmd(str) system(((string)str).c_str())
+// clearConsole() : system("cls"), clear the console
 #define clearConsole() system("cls")
+// pause() : pause the program and display a text to screen
 #define pause() system("pause")
+// pauseNT() : pause the program without displaying a text to console
+#define pauseNT() system("pause >nul");
+// setcolor depends on this. DONT CHANGE
 #define fx_private_setColor(dat) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | dat);
+// Key detecting
 #define KEY_DOWN(VK_NONAME) ((GetAsyncKeyState(VK_NONAME) & 0x8000) ? 1:0)
 
+// Escapement limits
 #define _Esc_maxn 1024
 
 #define ___EscDef___ true
@@ -43,6 +69,7 @@ using namespace std;
 
 #ifndef KEYs
 // keys
+// I didn't found that there's key mapping called VK_ so we'd recommend use VK_
 #define KEY_BACKSPACE                   8
 #define KEY_TAB                         9
 #define KEY_CLEAR                       12
@@ -162,8 +189,9 @@ using namespace std;
 #define KEYs true
 #endif
 
+// HairSpring Definitions
 #ifndef ___HSDef___
-// perm colors
+// perm. colors
 #define HS_CONSOLE_COLOR_BLACK			'0'
 #define HS_CONSOLE_COLOR_BLUE			'1'
 #define HS_CONSOLE_COLOR_GREEN			'2'
@@ -211,6 +239,7 @@ using namespace std;
 #define ___HSDef___
 #endif
 
+// mouse key mappings(still VK)
 #ifndef MOUSEs
 #define MOUSE_LEFT      0x01
 #define MOUSE_RIGHT     0x02
@@ -219,8 +248,11 @@ using namespace std;
 #define MOUSEs true
 #endif
 
+// Actor count limits
 #ifndef HS_MAX_ACTOR_COUNT
 #define HS_MAX_ACTOR_COUNT 256
 #endif
 
+// Decides whether use strict mode when the font isn't
+// supported
 bool _HS_MOUSE_ERR_FONT_WARNED_ = false;

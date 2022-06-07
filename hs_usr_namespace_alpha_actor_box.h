@@ -1,6 +1,5 @@
 namespace hs
 {
-    
     class Box
     {
     public:
