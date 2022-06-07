@@ -1,7 +1,7 @@
 # INDEV: This library is not completely completed and we are making more features for it.
 __Development Progress: [+++++|-----]50%__  
 
-## Remember to set the project to ANSI mode, and add "winmm.lib" to linker, or the sound engine can not work well(cannot compile).
+## Remember to set the project to ANSI mode(in microsoft visual studio, project settings), or the program will be unable to compile.
   
 # HairSpring
 A 2D library for cpp console games,  
