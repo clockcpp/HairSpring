@@ -16,7 +16,7 @@ we *probably* create a engine for it, once the lib has completed.
 - Processer: Intel Core i3 and higher, or the same performances AMD CPUs.
   
 ## devlopment software requirement:
-- IDE: Microsoft Visual Studio 2022 with C++ desktop development selected; [Download Visual Studio here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022)
+- IDE: Microsoft Visual Studio 2022 with C++ desktop development selected; [Download Visual Studio here](https://visualstudio.microsoft.com/downloads/#build-tools-for-visual-studio-2022), NOT Visual Studio Code
   
 ## developer requirement:
 - C++
