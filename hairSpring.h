@@ -7,7 +7,7 @@
  * Summary: The main head file of project HairSpring
  * 
  * Type: Open-source
- * License: GPL3
+ * License: LGPL 2.1
  * 
 **/
 
@@ -127,6 +127,7 @@ map<string, int> actorIDs;
  *			bool adjacent(int thisID, int* optionalIgnoreIDs = NULL);
  *			int getAdjacentState(int thisID, int targID);
  *			int getAdjacentStateNoRepeat(int thisID, int targID);
+ *			int getOutOfBundleState(int thisID);
  *		} actorHandler;
  *	in namespace hs:
  *		class trigger

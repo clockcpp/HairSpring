@@ -1,25 +1,59 @@
+/**
+ *
+ * !--			FILENAME: "hs_actor_handler.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios   	--
+ * !--			PROGRAMMER:	Executif			    	--
+ *
+ * Summary: Functions for controlling actors
+ *
+ * Type: Open-source
+ * License: LGPL 2.1
+ *
+**/
+
 namespace hs
 {
     int registerActorIMGByID(actorIMG target);
     int getActor(string);
 }
 
+/// <summary>
+/// a class that used to control actors
+/// use "actorHandler.<FunctionName>" in your code.
+/// </summary>
 class HS_actorsHandler
 {
 public:
+    /// <summary>
+    /// get the actor by its ID
+    /// </summary>
+    /// <param name="ID"></param>
+    /// <returns>the actor</returns>
     inline hs::actorIMG getActorByID(int ID)
     {
         return actorIMGs[ID];
     }
+    /// <summary>
+    /// get the count of actors, !! including logic actors!!
+    /// </summary>
+    /// <returns></returns>
     inline int getCountTotal()
     {
         return (int)actorIMGs.size();
     }
+    /// <summary>
+    /// remove a actor by its ID
+    /// </summary>
+    /// <param name="ID"></param>
     inline void removeByID(int ID)
     {
         actorIMGs.erase(actorIMGs.begin() + ID);
         return;
     }
+    /// <summary>
+    /// remove a actor by its name
+    /// </summary>
+    /// <param name="name"></param>
     void removeByName(string name)
     {
         int ID = hs::getActor(name);
@@ -53,6 +87,9 @@ public:
         actorIDs.clear();
         return;
     }
+    /// <summary>
+    /// erase all actors from the screen
+    /// </summary>
     void eraseAll()
     {
         for (int i = 0; i < actorIMGs.size(); ++i)
@@ -65,6 +102,9 @@ public:
         }
         return;
     }
+    /// <summary>
+    /// draw all the actors (not logic actors) to the screen
+    /// </summary>
     void drawAll()
     {
         for (int i = 0; i < actorIMGs.size(); ++i)
@@ -93,6 +133,12 @@ public:
         }
         return;
     }
+    /// <summary>
+    /// judge whether the actor hits another and threaded-up with it
+    /// </summary>
+    /// <param name="thisID"></param>
+    /// <param name="targID"></param>
+    /// <returns></returns>
     bool threadedUpWith(int thisID, int targID)
     {
         // skip self
@@ -175,6 +221,12 @@ public:
         }
         return flag;
     }
+    /// <summary>
+    /// judge whether the actor hits any other actor and threaded-up with it
+    /// </summary>
+    /// <param name="thisID"></param>
+    /// <param name="optionalIgnoreIDs"></param>
+    /// <returns></returns>
     bool threadedUp(int thisID, int* optionalIgnoreIDs = NULL)
     {
         // skip ignored actor.
@@ -206,6 +258,12 @@ public:
         }
         return flag;
     }
+    /// <summary>
+    /// judge whether the actor hits another but didn't threaded-up with it
+    /// </summary>
+    /// <param name="thisID"></param>
+    /// <param name="targID"></param>
+    /// <returns></returns>
     bool adjacentWith(int thisID, int targID)
     {
         bool ans = false;
@@ -235,6 +293,12 @@ public:
 
         return ans;
     }
+    /// <summary>
+    /// judge whether the actor hits any other actor but didn't threaded-up with it
+    /// </summary>
+    /// <param name="thisID"></param>
+    /// <param name="optionalIgnoreIDs"></param>
+    /// <returns></returns>
     bool adjacent(int thisID, int* optionalIgnoreIDs = NULL)
     {
         // skip ignored actor.
@@ -430,8 +494,88 @@ public:
         // didn't get anything
         return 0;
     }
+    /// <summary>
+    /// judge whether the targeting actor is out-of-bundle.
+    /// If so, return the state(use definition of HS_OOB_<STATE>), else return 0.
+    /// Def list:
+    /// HS_OOB_LEFT;
+    /// HS_OOB_RIGHT;
+    /// HS_OOB_UP;
+    /// HS_OOB_DOWN.
+    /// </summary>
+    /// <param name="thisID">the actor that should be detected</param>
+    /// <returns>the state(HS_OOB_)</returns>
+    int getOutOfBundleState(int thisID)
+    {
+        // make the hitbox a 'box'
+        hs::Box index;
+        index.to_box
+        (
+            {
+                actorIMGs[thisID].data.hitbox[0].X,
+                actorIMGs[thisID].data.hitbox[0].Y
+            },
+            {
+                actorIMGs[thisID].data.hitbox[3].X,
+                actorIMGs[thisID].data.hitbox[3].Y
+            }
+        );
+
+        // the box is valid?
+        if (!index.is_valid())
+        {
+            return HS_OOB_INVALID;
+        }
+
+        // judge whether it is out of bundle
+        /**
+         *                              x=n, y<0
+         *              +=======================================+
+         *              |-----------------------------------_¿ÚX|
+         *              |               HS_OOB_UP               |
+         *              |                                       |
+         * x<0, y=n     | HS_OOB_LEFT             HS_OOB_RIGHT  |       x>MAX, y=n
+         *              |                                       |
+         *              |                                       |
+         *              |               HS_OOB_DOWN             |
+         *              +---------------------------------------+
+         *                              x=n, y>MAXN
+        **/
+        short x[4];
+        short y[4];
+
+        for (int i = 0; i < 4; ++i)
+        {
+            x[i] = actorIMGs[thisID].position.X + actorIMGs[thisID].data.hitbox[i].X + actorIMGs[thisID].anchor.X;
+            y[i] = actorIMGs[thisID].position.Y + actorIMGs[thisID].data.hitbox[i].Y + actorIMGs[thisID].anchor.Y;
+        }
+
+        for (int i = 0; i < 4; ++i)
+        {
+            if (y[i] < 0)
+            {
+                return HS_OOB_UP;
+            }
+            if (y[i] > cfg.consoleSizeY)
+            {
+                return HS_OOB_DOWN;
+            }
+            if (x[i] < 0)
+            {
+                return HS_OOB_LEFT;
+            }
+            if (x[i] > cfg.consoleSizeX)
+            {
+                return HS_OOB_RIGHT;
+            }
+        }
+
+        // nothing
+        return HS_OOB_NOTHING;
+    }
 } actorHandler;
 
+// trigger part
 namespace hs
 {
     /// <summary>

@@ -7,7 +7,7 @@
  * Summary: The definitions of project HairSpring
  *
  * Type: Open-source
- * License: GPL3
+ * License: LGPL 2.1
  *
 **/
 
@@ -219,6 +219,7 @@ using namespace std;
 #define HS_COLOR_CYAN					6
 #define HS_COLOR_RANDOM                 7
 
+// chcps
 #define HS_CHCP_US                     "437"
 #define HS_CHCP_MULT                   "850"
 #define HS_CHCP_SLAVIC                 "852"
@@ -234,8 +235,17 @@ using namespace std;
 #define HS_CHCP_ANSI                   "65000"
 #define HS_CHCP_UNICODE                "65001"
 
+// distances
 #define HS_DISTANCE_MANHATTAN       0
 #define HS_DISTANCE_EUCLID          1
+
+// oob
+#define HS_OOB_NOTHING				0
+#define HS_OOB_UP					1
+#define HS_OOB_DOWN					2
+#define HS_OOB_LEFT					3
+#define HS_OOB_RIGHT				4
+#define HS_OOB_INVALID				-1
 #define ___HSDef___
 #endif
 
