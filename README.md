@@ -1,6 +1,8 @@
 # INDEV: This library is not completely completed and we are making more features for it.
 __Development Progress: [+++++|-----]51%__  
 
+![https://raw.githubusercontent.com/clockcpp/HairSpring/main/HairSpring%2BOWM.png](Project HairSpring)
+
 ## Remember to set the project to ANSI mode(in microsoft visual studio, project settings), or the program will be unable to compile.
   
 # HairSpring
