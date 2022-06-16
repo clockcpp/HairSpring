@@ -9,7 +9,7 @@ namespace hs
     COORD getMousePosition()
     {
         // thanks *anonymoususer__* at CSDN
-        COORD ans = { -1,-1 };
+        register COORD ans = { -1,-1 };
 
         HANDLE hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
         CONSOLE_FONT_INFO consoleCurrentFont;
@@ -17,10 +17,11 @@ namespace hs
         GetCursorPos(&tmp);
         ScreenToClient(cfg.consoleHwnd, &tmp);
         GetCurrentConsoleFont(hOutput, FALSE, &consoleCurrentFont);
-        ans.X = tmp.x /= consoleCurrentFont.dwFontSize.X;
-        ans.Y = tmp.y /= consoleCurrentFont.dwFontSize.Y;
+        
+        ans.X = short(tmp.x /= consoleCurrentFont.dwFontSize.X);
+        ans.Y = short(tmp.y /= consoleCurrentFont.dwFontSize.Y);
 
-        short ans_x_cpy = ans.X;
+        register short ans_x_cpy = ans.X;
         switch (consoleCurrentFont.dwFontSize.X)
         {
         case 5:

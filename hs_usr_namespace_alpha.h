@@ -7,7 +7,7 @@
  * Summary: core of project HairSpring.
  *
  * Type: Open-source
- * License: GPL3
+ * License: LGPL 2.1
  *
 **/
 
@@ -184,3 +184,16 @@
  * 
 **/
 #include "hs_usr_namespace_alpha_actor.h"
+
+/**
+ * 
+ * NAME:
+ *		"hs_usr_namespace_alpha_windows.h"
+ * 
+ * SUMMARY:
+ *		The main part of window processing
+ * 
+ * CONTAINS:
+ * 
+**/
+#include "hs_usr_namespace_alpha_windows.h"

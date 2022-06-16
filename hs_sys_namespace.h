@@ -58,34 +58,46 @@ namespace _HairSpring
         }
         cmd("color " + background + foreground);
     }
-    bool setTextColor(int color)
+    /// <summary>
+    /// set the text color
+    /// </summary>
+    /// <param name="color">the color</param>
+    /// <param name="use_hex">set this to true if you use hex color</param>
+    /// <param name="ins">set this to false if you use ins</param>
+    /// <returns>true is fail, false is success</returns>
+    bool setTextColor(int color, bool use_hex = false, bool ins=true)
     {
+        if (use_hex)
+        {
+            SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+            return false;
+        }
         bool flag = true;
         switch (color)
         {
         case 0:
-            fx_private_setColor(FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
+            fx_private_setColor(ins, FOREGROUND_RED | FOREGROUND_GREEN | FOREGROUND_BLUE);
             break;
         case 1:
-            fx_private_setColor(FOREGROUND_RED);
+            fx_private_setColor(ins, FOREGROUND_RED);
             break;
         case 2:
-            fx_private_setColor(FOREGROUND_GREEN);
+            fx_private_setColor(ins, FOREGROUND_GREEN);
             break;
         case 3:
-            fx_private_setColor(FOREGROUND_BLUE);
+            fx_private_setColor(ins, FOREGROUND_BLUE);
             break;
         case 4:
-            fx_private_setColor(FOREGROUND_RED | FOREGROUND_GREEN);
+            fx_private_setColor(ins, FOREGROUND_RED | FOREGROUND_GREEN);
             break;
         case 5:
-            fx_private_setColor(FOREGROUND_RED | FOREGROUND_BLUE);
+            fx_private_setColor(ins, FOREGROUND_RED | FOREGROUND_BLUE);
             break;
         case 6:
-            fx_private_setColor(FOREGROUND_GREEN | FOREGROUND_BLUE);
+            fx_private_setColor(ins, FOREGROUND_GREEN | FOREGROUND_BLUE);
             break;
         case 7:
-            return(setTextColor(spawnRandom(0, 6)));
+            return (setTextColor(spawnRandom(0, 6), use_hex, ins));
         case 255:
             SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY);
             break;

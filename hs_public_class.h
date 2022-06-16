@@ -1,3 +1,17 @@
+/**
+ *
+ * !--			FILENAME: "hs_public_class.h"       	--
+ * !--			ORGANIZATION: 2022(c) ExL Studios		--
+ * !--			PROGRAMMER:	Executif					--
+ *
+ * Summary: public classes and structs of the project HairSpring
+ *
+ * Type: Open-source
+ * License: LGPL 2.1
+ *
+**/
+
+// the config of the game
 struct gmConfig
 {
     /// <summary>
@@ -69,13 +83,63 @@ struct gmConfig
 
     bool strictMode = false;
 } cfg;
+
+// the struct that saves the titlebar info
+struct winPropertiesTitleBar
+{
+    string title = "Untitled window";
+    bool showImage = true;
+    string Image = "@";
+    bool showMinimizeButton = true;
+    bool showMaximizeButton = true;
+    bool showCloseButton = true;
+};
+
+// the content of the window
+struct winContent
+{
+    vector<string> texts;
+    int OffsetX = 0;
+    int OffsetY = 0;
+
+    bool use_hex_colors = false;
+    bool use_pure_color = true;
+    bool use_ins_colors = true;
+    vector<string> colors;
+    int pure_color = HS_COLOR_PUREWHITE;
+};
+
+// the win properties
+struct winProperties
+{
+    bool enableTitleBar = true;
+    winPropertiesTitleBar titleBarData;
+    winContent content;
+    short bodySizeX = 32;
+    short bodySizeY = 10;
+    short positionX = 0;
+    short positionY = 0;
+    bool moveable = true;
+    bool borderlessWindowedMode = false;
+    short align = HS_WINDOW_ALIGN_CENTER;
+    int layer = -1;
+    bool frameColorUseHex = false;
+    bool frameColorIns = true;
+    int frameColor = HS_COLOR_PUREWHITE;
+    bool visibility = true;
+    bool inFocus = false;
+};
+typedef winProperties hsWdat;
+
+// the pauser of game
 struct gamePause
 {
     bool pauseServer;
     bool pauseClient;
     bool pauseWatchDog;
 };
-struct hd
+// the handler of the game
+struct __hs_game_main_handler
 {
     gamePause pause = {false, false, false};
     bool stopGame = false;

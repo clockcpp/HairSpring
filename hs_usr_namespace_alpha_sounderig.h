@@ -26,8 +26,8 @@ namespace hs
     bool playSnd(string path, string SID)
     {
         bool flag = false;
-        flag |= mciSendString(lpcstr("open " + path + " alias " + SID), NULL, 0, NULL);
-        flag |= mciSendString(lpcstr("play " + SID), NULL, 0, NULL);
+        flag |= (bool)mciSendString(lpcstr("open " + path + " alias " + SID), NULL, 0, NULL);
+        flag |= (bool)mciSendString(lpcstr("play " + SID), NULL, 0, NULL);
         return flag;
     }
 
@@ -39,9 +39,7 @@ namespace hs
     /// <returns></returns>
     bool preLoadSnd(string path, string SID)
     {
-        bool flag = false;
-        flag |= mciSendString(lpcstr("open " + path + " alias " + SID), NULL, 0, NULL);
-        return flag;
+        return mciSendString(lpcstr("open " + path + " alias " + SID), NULL, 0, NULL);;
     }
 
     /// <summary>
@@ -52,9 +50,7 @@ namespace hs
     /// <returns></returns>
     bool playPreLoadedSnd(string path, string SID)
     {
-        bool flag = false;
-        flag |= mciSendString(lpcstr("play " + SID), NULL, 0, NULL);
-        return flag;
+        return mciSendString(lpcstr("play " + SID), NULL, 0, NULL);
     }
 
     /// <summary>

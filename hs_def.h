@@ -56,8 +56,20 @@ using namespace std;
 #define pause() system("pause")
 // pauseNT() : pause the program without displaying a text to console
 #define pauseNT() system("pause >nul");
-// setcolor depends on this. DONT CHANGE
-#define fx_private_setColor(dat) SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | dat);
+// setcolor depends on this. DONT EDIT
+inline void fx_private_setColor(bool ins, WORD dat)
+{
+	if (ins)
+	{
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), FOREGROUND_INTENSITY | dat);
+	}
+	else
+	{
+		SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), dat);
+	}
+	return;
+}
+
 // Key detecting
 #define KEY_DOWN(VK_NONAME) ((GetAsyncKeyState(VK_NONAME) & 0x8000) ? 1:0)
 
@@ -246,6 +258,19 @@ using namespace std;
 #define HS_OOB_LEFT					3
 #define HS_OOB_RIGHT				4
 #define HS_OOB_INVALID				-1
+
+// win align
+#define HS_WINDOW_ALIGN_DEFAULT		0
+#define HS_WINDOW_ALIGN_CENTER		0
+#define HS_WINDOW_ALIGN_CENTRE		0
+#define HS_WINDOW_ALIGN_UPLEFT		1
+#define HS_WINDOW_ALIGN_UPRIGHT		2
+#define HS_WINDOW_ALIGN_DWLEFT		3
+#define HS_WINDOW_ALIGN_DWRIGHT		4
+#define HS_WINDOW_ALIGN_UP			5
+#define HS_WINDOW_ALIGN_DOWN		6
+#define HS_WINDOW_ALIGN_LEFT		7
+#define HS_WINDOW_ALIGN_RIGHT		8
 #define ___HSDef___
 #endif
 
@@ -266,3 +291,23 @@ using namespace std;
 // Decides whether use strict mode when the font isn't
 // supported
 bool _HS_MOUSE_ERR_FONT_WARNED_ = false;
+
+namespace hs
+{
+    // the color map
+    int colorMap[HS_MAXN] = { 0 };
+    void init_colorMap()
+    {
+        colorMap[' '] = HS_COLOR_PUREWHITE;
+        colorMap['\0'] = HS_COLOR_PUREWHITE;
+
+        colorMap['r'] = HS_COLOR_RED;
+        colorMap['g'] = HS_COLOR_GREEN;
+        colorMap['b'] = HS_COLOR_BLUE;
+        colorMap['y'] = HS_COLOR_YELLOW;
+        colorMap['p'] = HS_COLOR_PURPLE;
+        colorMap['c'] = HS_COLOR_CYAN;
+        colorMap['w'] = HS_COLOR_PUREWHITE;
+        colorMap['o'] = HS_COLOR_RANDOM;
+    }
+};

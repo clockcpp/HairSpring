@@ -170,20 +170,26 @@ int main(int argc, char* argv[])
 {
     config(argc, argv);
     hs::applyConfig(cfg);
+    hs::init_colorMap();
     init(argc, argv);
     thread svr(Server, argc, argv);
     thread clt(Client, argc, argv);
     thread wd(watchdog);
     thread keylogger(_HairSpring::KeyCodeTracker);
+    thread dwm(__hs_desktop_windows_manager);
     while (!handler.stopGame)
     {
         Sleep(cfg.max_sleep_time_main);
     }
     int returnValue = quit(argc, argv);
     // end
+    if (dwm.joinable())
+    {
+        dwm.detach();
+    }
     if (keylogger.joinable())
     {
-        keylogger.join();
+        keylogger.detach();
     }
     if (svr.joinable())
     {

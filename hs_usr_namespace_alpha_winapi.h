@@ -1,3 +1,17 @@
+/**
+ *
+ * !--			FILENAME: "hs_namesapce_alpha_winapi.h" 	--
+ * !--			ORGANIZATION: 2022(c) ExL Studios	    	--
+ * !--			PROGRAMMER:	Executif				    	--
+ *
+ * Summary: WinAPI part of proj. HairSpring.
+ *
+ * Type: Open-source
+ * License: LGPL 2.1
+ *
+**/
+
+
 namespace hs
 {
     HWND getConsoleHWND()
@@ -11,6 +25,7 @@ namespace hs
         else
         {
             mav("Failed to get window handle.");
+            return NULL;
         }
     }
     inline bool isFocus(HWND thisWindow)
@@ -111,10 +126,9 @@ namespace hs
         HANDLE hOutput;
         COORD coord = { 0, 0 };
         hOutput = GetStdHandle(STD_OUTPUT_HANDLE);
-        // change visibility of the cursor
-        CONSOLE_CURSOR_INFO cci;
-        cci.bVisible = state;
-        cci.dwSize = 1;
+
+        // set visibility of the cursor
+        CONSOLE_CURSOR_INFO cci = { 1,state };
         SetConsoleCursorInfo(hOutput, &cci);
     }
 }
