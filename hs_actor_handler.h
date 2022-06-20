@@ -573,6 +573,18 @@ public:
         // nothing
         return HS_OOB_NOTHING;
     }
+
+    void syncDataWithID(int self, int targ)
+    {
+        actorIMGs[targ].anchor = actorIMGs[self].anchor;
+        actorIMGs[targ].attr.NoClip = actorIMGs[self].attr.NoClip;
+        actorIMGs[targ].attr.NoGravity = actorIMGs[self].attr.NoGravity;
+        actorIMGs[targ].teleport(actorIMGs[self].position);
+    }
+    void syncDataWithName(string self, string targ)
+    {
+        syncDataWithID(hs::getActor(self), hs::getActor(targ));
+    }
 } actorHandler;
 
 // trigger part

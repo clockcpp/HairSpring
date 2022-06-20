@@ -1,3 +1,16 @@
+/**
+ *
+ * !--			FILENAME: "hs_usr_namespace_beta.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios       	--
+ * !--			PROGRAMMER:	Executif				        --
+ *
+ * Summary: The secondary controller like the alpha
+ *
+ * Type: Open-source
+ * License: LGPL 2.1
+ *
+**/
+
 namespace hs
 {
     /// <summary>
@@ -44,4 +57,31 @@ namespace hs
     }
 }
 
+/**
+ *
+ * NAME:
+ *		"hs_usr_namespace_beta_mouse.h"
+ *
+ * SUMMARY:
+ *		The part which recives the mouse info
+ *
+ * CONTAINS:
+ *      bool mouseDownAtActor(int key, int targID);
+ *      bool mousePressAtActor(int key, int targID);
+ *
+**/
 #include "hs_usr_namespace_beta_mouse.h"
+
+/**
+ *
+ * NAME:
+ *		"hs_usr_namespace_alpha_actor_animation.h"
+ *
+ * SUMMARY:
+ *		The part which controls the actor animations
+ *
+ * CONTAINS:
+ *
+ *
+**/
+#include "hs_usr_namespace_beta_actor_animation.h"

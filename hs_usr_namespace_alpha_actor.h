@@ -36,7 +36,6 @@ namespace hs
     {
     public:
         DAT data;
-        DAT animate;
         void draw(COORD where)
         {
             // record last position
