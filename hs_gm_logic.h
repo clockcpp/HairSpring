@@ -176,20 +176,30 @@ int main(int argc, char* argv[])
     thread clt(Client, argc, argv);
     thread wd(watchdog);
     thread keylogger(_HairSpring::KeyCodeTracker);
+
+// hs windows
+#ifdef __USE_HS_WINDOWS
     thread dwm(__hs_desktop_windows_manager);
+#endif
+
     while (!handler.stopGame)
     {
         Sleep(cfg.max_sleep_time_main);
     }
     int returnValue = quit(argc, argv);
     // end
+
+// hs windows
+#ifdef __USE_HS_WINDOWS
     if (dwm.joinable())
     {
         dwm.detach();
     }
+#endif
+
     if (keylogger.joinable())
     {
-        keylogger.detach();
+        keylogger.join();
     }
     if (svr.joinable())
     {

@@ -192,8 +192,10 @@
  * 
  * SUMMARY:
  *		The main part of window processing
+ *		GIVEN UP
  * 
  * CONTAINS:
  * 
 **/
-#include "hs_usr_namespace_alpha_windows.h"
+/// #define __USE_HS_WINDOWS true
+/// #include "hs_usr_namespace_alpha_windows.h"

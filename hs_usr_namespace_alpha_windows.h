@@ -8,6 +8,7 @@
  *
  * Type: Open-source
  * License: LGPL 2.1
+ * WARNING : CONTAINS BUGS THAT WILL NOT BE FIXED
  *
 **/
 
@@ -353,6 +354,10 @@ public:
 	bool hitedTitlebar()
 	{
 		// TODO : debug titlebar
+		if (!HSWDAT[this->thisID].enableTitleBar || HSWDAT[this->thisID].borderlessWindowedMode)
+		{
+			return false;
+		}
 		if
 		(
 			hs::mouseDownIn
