@@ -1,5 +1,5 @@
 # INDEV: This library is not completely completed and we are making more features for it.
-__Development Progress: [+++++|-----]51%__  
+__Development Progress: [+++++++++--]85%__  
 
 ![Project HairSpring](https://raw.githubusercontent.com/clockcpp/HairSpring/main/HairSpring%2BOWM.png)
 
