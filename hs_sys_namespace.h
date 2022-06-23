@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_sys_namespace.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios		--
+ * !--			PROGRAMMER:	Executif					--
+ * 
+ * Summary: The internal functions, should not be used in users' game
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 namespace _HairSpring
 {
     int spawnRandom(int min, int max)

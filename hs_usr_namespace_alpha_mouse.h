@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_usr_namespace_alpha_mouse.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios					--
+ * !--			PROGRAMMER:	Executif								--
+ * 
+ * Summary: The main part that get mouse operations
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 void HS_ERROR_HANDLER_UNSTRICT__(string);
 
 namespace hs

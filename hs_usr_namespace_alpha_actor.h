@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_usr_namespace_alpha_actor.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios					--
+ * !--			PROGRAMMER:	Executif								--
+ * 
+ * Summary: The main part controls actors
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 namespace hs
 {
     struct DAT

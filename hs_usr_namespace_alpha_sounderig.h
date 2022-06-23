@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_usr_namespace_alpha_sounderig.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios						--
+ * !--			PROGRAMMER:	Executif									--
+ * 
+ * Summary: The sound engine (with MCISendString)
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 namespace hs
 {
     /// <summary>

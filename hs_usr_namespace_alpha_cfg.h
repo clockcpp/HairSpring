@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_usr_namespace_alpha_cfg.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios					--
+ * !--			PROGRAMMER:	Executif								--
+ * 
+ * Summary: The part that reads config files
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 namespace hs
 {
     /// <summary>

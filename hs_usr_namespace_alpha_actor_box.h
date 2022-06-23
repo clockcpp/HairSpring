@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_usr_namespace_alpha_actor_box.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios						--
+ * !--			PROGRAMMER:	Executif									--
+ * 
+ * Summary: The part that controls the actors' hitbox
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 namespace hs
 {
     class Box

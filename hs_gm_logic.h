@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_gm_logic.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios	--
+ * !--			PROGRAMMER:	Executif				--
+ * 
+ * Summary: The main game logic part
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 
 int dbgFPS = 0, dbgTPS = 0;
 bool svrHeartBeat = true, cltHeartBeat = true;

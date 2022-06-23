@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_usr_namespace_winapi2.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios				--
+ * !--			PROGRAMMER:	Executif							--
+ * 
+ * Summary: The secondary winAPI part
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 namespace hs
 {
     HANDLE getHandle()

@@ -1,3 +1,16 @@
+/**
+ * 
+ * !--			FILENAME: "hs_err_handler.h"			--
+ * !--			ORGANIZATION: 2022(c) ExL Studios		--
+ * !--			PROGRAMMER:	Executif					--
+ * 
+ * Summary: The error handler
+ * 
+ * Type: Open-source
+ * License: LGPL 2.1
+ * 
+**/
+
 void HS_BLUECONSOLE__(int errorCode)
 {
     if (errorCode > 0)
