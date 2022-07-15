@@ -27,10 +27,6 @@ namespace hs
 		{
 			return this->data[now];
 		}
-		inline void update()
-		{
-
-		}
 		/// <summary>
 		/// load animate frams from an animate list file
 		/// </summary>
@@ -104,12 +100,17 @@ namespace hs
 		/// <summary>
 		/// change current frame to next(become the first if already reached the end)
 		/// </summary>
-		void showNext()
+		void showNext(int after = 0, int before = 0x3f3f3f)
 		{
-			int tmp = this->now;
-			if (tmp == this->data.size() - 1)
+			if (before == 0x3f3f3f)
 			{
-				tmp = 0;
+				before = int(this->data.size() - 1);
+			}
+
+			int tmp = this->now;
+			if (tmp == before)
+			{
+				tmp = after;
 			}
 			else
 			{
@@ -121,12 +122,17 @@ namespace hs
 		/// <summary>
 		/// change current frame to previous(become the last if this is the first)
 		/// </summary>
-		void showPrev()
+		void showPrev(int after = 0, int before = 0x3f3f3f)
 		{
-			int tmp = this->now;
-			if (tmp == 0)
+			if (before == 0x3f3f3f)
 			{
-				tmp = int(this->data.size() - 1);
+				before = int(this->data.size() - 1);
+			}
+
+			int tmp = this->now;
+			if (tmp == after)
+			{
+				tmp = before;
 			}
 			else
 			{
