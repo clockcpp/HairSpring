@@ -40,6 +40,7 @@ namespace hs
     {
         bool flag = false;
         flag |= (bool)mciSendString(lpcstr("open " + path + " alias " + SID), NULL, 0, NULL);
+        mciSendString(lpcstr("seek " + SID + " to start"), NULL, 0, NULL);
         flag |= (bool)mciSendString(lpcstr("play " + SID), NULL, 0, NULL);
         return flag;
     }
@@ -61,8 +62,9 @@ namespace hs
     /// <param name="path">the path of sound file</param>
     /// <param name="SID">the SID(a string, ID of the sound)</param>
     /// <returns></returns>
-    bool playPreLoadedSnd(string path, string SID)
+    bool playPreLoadedSnd(string SID)
     {
+        mciSendString(lpcstr("seek " + SID + " to start"), NULL, 0, NULL);
         return mciSendString(lpcstr("play " + SID), NULL, 0, NULL);
     }
 
@@ -94,5 +96,15 @@ namespace hs
     bool stopSnd(string SID)
     {
         return mciSendString(lpcstr("stop " + SID), NULL, 0, NULL);
+    }
+
+    /// <summary>
+    /// close a sound with SID
+    /// </summary>
+    /// <param name="SID"></param>
+    /// <returns></returns>
+    bool closeSnd(string SID)
+    {
+        return mciSendString(lpcstr("close " + SID), NULL, 0, NULL);
     }
 }
