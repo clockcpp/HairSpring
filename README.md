@@ -1,5 +1,7 @@
 ![Project HairSpring](https://raw.githubusercontent.com/clockcpp/HairSpring/main/HairSpring%2BOWM.png)
 
+### Documention Progress:[----------] 0%
+
 ## Remember to set the project to ANSI mode(in microsoft visual studio, project settings), or the program will be unable to compile.
   
 # HairSpring
