@@ -43,19 +43,6 @@ using namespace hs;
 ```
 but be carefully when you use this, it may cause lots of functions with the same name in the source code
 
-# When a update has been pushed, what does it means?
-- inside repo: only tested the latest features by myself
-- DEV release: only tested by myself
-- ALPHA release: only created a game by myself
-- BETA release: QA tested.
-- PRE release: full tested.
-- release: everything is OK.
-  
-# flowchart(sketch):
-we are \**about*\* to add support for game menus in the future  
-__**this flowchart may be out of date.**__
-![flowchart](https://raw.githubusercontent.com/clockcpp/HairSpring/main/flowchart(sketch).png)
-
 ## For fun:
 ### ---{ Graphics }---  
 ☐ You forget what reality is  
@@ -84,7 +71,7 @@ __**this flowchart may be out of date.**__
   
 ### ---{ Audience }---  
 ☐ Kids  
-☑ Teens // It's easy for C++ programmers or amateurs!(just recite the functions all the days(no! god! please! NOOOO!))  
+☑ Teens // It's easy for C++ programmers or amateurs!  
 ☑ Adults  
 ☐ Grandma  
   
