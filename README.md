@@ -78,8 +78,8 @@ __**this flowchart may be out of date.**__
 ☐ Eargasm  
 ☐ Very good  
 ☐ Good  
-☐ Not too bad  
-☑ Bad   // You can only create beep or play a audio file at one time until I've solve the problem between playsound and wmi-str. I may try openAL or fmod later.  
+☑ Not too bad // there's still problems on the sound engine. we will add more features in further updates.  
+☐ Bad  
 ☐ I'm now deaf  
   
 ### ---{ Audience }---  
